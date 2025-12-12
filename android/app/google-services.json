@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370443039808",
+    "project_id": "whypost",
+    "storage_bucket": "whypost.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370443039808:android:4b636da0138a08fd1e9ba5",
+        "android_client_info": {
+          "package_name": "com.whypost.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw2MFarBAHBMw_ZNRsNZjyXUXtWwRGrgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,23 @@
+abstract final class Routes {
+  static const home = "/";
+  static const search = "/search";
+  static const notifications = "/notifications";
+  static const profile = "/profile";
+  static const splash = "/splash";
+  static const addPost = "/addpost";
+  static const viewPost = "/viewPost";
+  static const instance = "/chooseinstance";
+  static const instanceAuthPage = "/instanceauth";
+  static const tagPosts = "/tags/:name";
+  static const viewVideo = "/video";
+  static const viewImages = "/images";
+  static const settings = "/settings";
+  static const timeline = "/timeline";
+  static const aboutApp = "/about";
+  static const instanceInfo = "/instanceinfo";
+  static const userProfile = "/user/:userId";
+  static const detailNotifications = "/notifications/:id";
+  static const followers = "/followers";
+  static const following = "/following";
+  static const editProfile = "/editProfile";
+}
