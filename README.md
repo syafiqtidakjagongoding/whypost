@@ -1,41 +1,109 @@
-## 📱 Whypost — Fediverse Client for Mobile
 
-Whypost is a lightweight, modern Fediverse client for Android and iOS, designed to give users a fast and pleasant way to interact with decentralized social networks such as Mastodon, Akkoma, Gotosocial and other mastodon api platforms.
+## 📱 Why Post — Fediverse Client for Mobile
 
-The app focuses on speed, simplicity, and a smooth mobile-first user experience.
+Why Post is a lightweight, modern Fediverse client for Android and IOS (Not tested) written in Flutter, designed to give users a fast, easy to use and pleasant way to interact with decentralized social networks such as Mastodon, Akkoma, Gotosocial and other similar mastodon api platforms.
 
-## ✨ Key Features
+The app focuses on speed, easy to use, and a smooth mobile-first user experience.
 
-🔐 Login to any Fediverse instance
 
-🏠 Home / Local / Federated timelines
 
-🔔 Real-time notifications
+## Overview
 
-👤 Profile, Followers, Following
+Overview app
 
-📝 Create posts with text, images, and visibility settings
+<p align="center">
+  <img src="readme/overview1.jpeg" width="40%" alt="Overview 1" />
+  <img src="readme/overview2.jpeg" width="40%" alt="Overview 2" />
+</p>
 
-💬 Reply, Boost, Favorite
+## Supported instances
 
-🔍 Discovery & Trends (if supported by instance)
+| Instances             | Supported                                                                |
+| ----------------- | ------------------------------------------------------------------ |
+| Mastodon   | ✅ Works      |
+| GoToSocial | ✅ Works      |
+| Akkoma     | ✅ Works      |
+| Pleroma    | ⚠️ Not tested |
+| Misskey    | ❌ Not working|
+| Friendica  | ⚠️ Minor issues |
 
-🎨 Modern and responsive UI
 
-📙 Multi-account support (will be implemented)
+## Supported Platform
 
-🟧 Fast and lightweight splash screen
+| Platform             | Supported                                                                |
+| ----------------- | ------------------------------------------------------------------ |
+| Android 15   | ✅ Supported      |
+| Other Version Android   | ⚠️ Not tested      |
+| IOS | ❌ Not Supported      |
 
-### 🚀 Roadmap
 
- Dark mode / theme customization
 
- Post drafts
 
- Bookmarks
 
- Plugin/filter system
 
- PWA / Web version (optional)
+## Features
 
- Full Misskey API support
+- 🔐 Login to any Fediverse instance (if supported)
+- 🏠 Home / Local / Public / Trends timelines
+
+- 🔔 Real-time notifications (will be implemented)
+
+- 👤 Profile, Followers, Following
+
+- 📝 Create posts with text, images, and visibility settings
+
+- 💬 Reply, Boost, Favorite
+
+- 🔍 Discovery & Trends (if supported by instance)
+
+- 🎨 Modern and responsive UI
+
+- 📙 Multi-account support (will be implemented)
+
+
+
+
+## Download
+
+
+Prebuilt APKs are available on Codeberg Releases:
+https://codeberg.org/whypost/whypost-mobile/releases
+
+## Documentation
+
+## 🌐 What is the Fediverse?
+
+The Fediverse (short for federated universe) is a network of independently hosted social platforms that can communicate with each other using open standards such as ActivityPub.
+
+Instead of being controlled by a single company, the Fediverse is made up of many servers (called instances), each with its own rules, moderation policies, and communities — but all connected.
+
+Users on different servers can:
+- Follow each other
+- Like, reply, and boost posts
+- Share content across platforms
+
+## 🧩 What is an Instance?
+
+An instance is an individual server in the Fediverse you can run your own by yourself.
+
+Examples:
+- mastodon.social
+- fosstodon.org
+- fe.disroot.org
+
+Each instance:
+- Has its own administrators
+- Defines its own moderation rules
+- Can block or federate with other instances
+
+
+## 💬 Feedback
+
+Feedback, bug reports, and feature requests are welcome.
+
+Please join our Matrix room:
+[**#whypost:matrix.org**](https://matrix.to/#/!OhhWNdYbCtMYHZIRVO:matrix.org?via=matrix.org&via=tchncs.de)
+
+## Support
+For support, email whypost-whynot@proton.me or join our Matrix room.
+

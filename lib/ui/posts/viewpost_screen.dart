@@ -109,27 +109,33 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
         ),
         title: Text(isBookmarked ? 'UnBookmark' : 'Bookmark Post'),
         onTap: () async {
+          final messenger = ScaffoldMessenger.of(context);
+
           Map<String, dynamic> result;
           if (isBookmarked) {
             result = await ref.read(
               unbookmarkPostActionProvider(widget.postId).future,
             );
+            messenger.showSnackBar(
+              const SnackBar(
+                content: Text("Successfully unbookmarked post"),
+                backgroundColor: Colors.green,
+              ),
+            );
           } else {
             result = await ref.read(
               bookmarkPostActionProvider(widget.postId).future,
+            );
+            messenger.showSnackBar(
+              const SnackBar(
+                content: Text("Successfully bookmarked post"),
+                backgroundColor: Colors.green,
+              ),
             );
           }
           ref.read(bookmarkProvider.notifier).update((state) {
             return {...state, widget.postId: result['bookmarked']};
           });
-
-          final messenger = ScaffoldMessenger.of(context);
-          messenger.showSnackBar(
-            const SnackBar(
-              content: Text("Successfully bookmarked post"),
-              backgroundColor: Colors.green,
-            ),
-          );
           ref.invalidate(bookmarkedTimelineProvider);
         },
       ),
@@ -516,8 +522,8 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
           ),
         ),
       ),
-       bottomNavigationBar: SafeArea(
-         child: Padding(
+      bottomNavigationBar: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: GestureDetector(
             onTap: () {

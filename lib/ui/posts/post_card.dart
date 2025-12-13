@@ -48,9 +48,7 @@ class _PostCardState extends ConsumerState<PostCard> {
           leading: const Icon(Icons.edit, color: Colors.blue),
           title: const Text('Edit Post'),
           onTap: () {
-            context.push(
-              "/edit-post/$postId",
-            );
+            context.push("/edit-post/$postId");
           },
         ),
       );
@@ -98,7 +96,9 @@ class _PostCardState extends ConsumerState<PostCard> {
                             backgroundColor: Colors.green,
                           ),
                         );
-                        ref.invalidate(statusesTimelineProvider(currentUserId!));
+                        ref.invalidate(
+                          statusesTimelineProvider(currentUserId!),
+                        );
                       },
                       child: Text(
                         "Delete",
@@ -127,26 +127,33 @@ class _PostCardState extends ConsumerState<PostCard> {
         title: Text(isBookmarked ? 'UnBookmark' : 'Bookmark Post'),
         onTap: () async {
           Map<String, dynamic> result;
+          final messenger = ScaffoldMessenger.of(context);
+
           if (isBookmarked) {
             result = await ref.read(
               unbookmarkPostActionProvider(widget.post['id']).future,
             );
+            messenger.showSnackBar(
+              const SnackBar(
+                content: Text("Successfully unbookmarked post"),
+                backgroundColor: Colors.green,
+              ),
+            );
           } else {
             result = await ref.read(
               bookmarkPostActionProvider(widget.post['id']).future,
+            );
+            messenger.showSnackBar(
+              const SnackBar(
+                content: Text("Successfully bookmarked post"),
+                backgroundColor: Colors.green,
+              ),
             );
           }
           ref.read(bookmarkProvider.notifier).update((state) {
             return {...state, widget.post['id']: result['bookmarked']};
           });
 
-          final messenger = ScaffoldMessenger.of(context);
-          messenger.showSnackBar(
-            const SnackBar(
-              content: Text("Successfully bookmarked post"),
-              backgroundColor: Colors.green,
-            ),
-          );
           ref.invalidate(bookmarkedTimelineProvider);
         },
       ),
