@@ -3,12 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whypost/constant/software.dart';
 import 'package:whypost/routing/routes.dart';
-import 'package:whypost/state/explore.dart';
 import 'package:whypost/state/instance.dart';
 import 'package:whypost/state/timeline.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
-import 'package:whypost/state/trends.dart';
-import 'package:whypost/state/account.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:whypost/ui/posts/post_card.dart';
 
@@ -108,9 +105,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 loading: () => const DrawerHeader(
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                error: (e, st) => const DrawerHeader(
-                  child: Center(child: Text("Failed to load instance")),
-                ),
+             error: (e, st) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Failed to load instance"),
+                        backgroundColor: Colors.red,
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
+                  });
+
+                  return const SizedBox.shrink();
+                },
                 data: (instance) => DrawerHeader(
                   decoration: BoxDecoration(
                     image: instance['thumbnail'] != null
@@ -127,7 +134,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (instance['uri'] != null)
-                          Text("https://${instance['uri']}", style: TextStyle(color: Colors.white),),
+                          Text(
+                            "https://${instance['uri']}",
+                            style: TextStyle(color: Colors.white),
+                          ),
                       ],
                     ),
                   ),
@@ -233,7 +243,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    Text("Error $e"),
+                    Text("Failed to load home timeline"),
                   ],
                 ),
               );
@@ -298,7 +308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    Text("Error $e"),
+                    Text("Failed to load trends timeline"),
                   ],
                 ),
               );
@@ -354,7 +364,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    Text("Error $e"),
+                    Text("Failed to load local timeline"),
                   ],
                 ),
               );
@@ -410,7 +420,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    Text("Error $e"),
+                    Text("Failed to load public timeline"),
                   ],
                 ),
               );

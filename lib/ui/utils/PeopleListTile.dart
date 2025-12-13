@@ -137,31 +137,51 @@ class _PeopleListTileState extends ConsumerState<PeopleListTile> {
                               final res = await ref.read(
                                 unfollowUserProvider(id).future,
                               );
-                              ref.read(followProvider.notifier).update((state) {
-                                return {...state, id: res!['following']};
-                              });
+                              ref
+                                  .read(followProvider.notifier)
+                                  .update(
+                                    (state) => {
+                                      ...state,
+                                      id: res?['following'] ?? false,
+                                    },
+                                  );
+                              ref
+                                  .read(requestedFollowProvider.notifier)
+                                  .update(
+                                    (state) => {
+                                      ...state,
+                                      id: res?['requested'] ?? false,
+                                    },
+                                  );
                             } else {
                               final res = await ref.read(
                                 followUserProvider(id).future,
                               );
-                              if (res!['requested']) {
-                                ref
-                                    .read(requestedFollowProvider.notifier)
-                                    .update((state) {
-                                      return {...state, id: res['requested']};
-                                    });
-                              } else {
-                                ref.read(followProvider.notifier).update((
-                                  state,
-                                ) {
-                                  return {...state, id: res['following']};
-                                });
-                              }
+                              ref
+                                  .read(followProvider.notifier)
+                                  .update(
+                                    (state) => {
+                                      ...state,
+                                      id: res?['following'] ?? false,
+                                    },
+                                  );
+                              ref
+                                  .read(requestedFollowProvider.notifier)
+                                  .update(
+                                    (state) => {
+                                      ...state,
+                                      id: res?['requested'] ?? false,
+                                    },
+                                  );
                             }
+
+                            ref.invalidate(
+                              accountFollowingProvider(currentUserId!),
+                            );
                             ref.invalidate(relationshipProvider(id));
                           } catch (e) {
                             final messenger = ScaffoldMessenger.of(context);
-                              messenger.showSnackBar(
+                            messenger.showSnackBar(
                               const SnackBar(
                                 content: Text("Something went wrong."),
                                 backgroundColor: Colors.red,
@@ -187,10 +207,10 @@ class _PeopleListTileState extends ConsumerState<PeopleListTile> {
                           ),
                         ),
                         child: Text(
-                          isFollowed == true
-                              ? "Following"
-                              : isRequested == true
+                          isRequested == true
                               ? "Requested"
+                              : isFollowed == true
+                              ? "Following"
                               : "Follow",
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:whypost/constant/config.dart';
 
 Future<List<Map<String, dynamic>>> getAccountFollowers({
   required String instanceUrl,
@@ -8,7 +9,7 @@ Future<List<Map<String, dynamic>>> getAccountFollowers({
   required String accessToken,
   int limit = 40,
 }) async {
-  try {
+
     final uri = Uri.parse(
       "$instanceUrl/api/v1/accounts/$accountId/followers",
     ).replace(queryParameters: {"limit": "$limit"});
@@ -16,7 +17,16 @@ Future<List<Map<String, dynamic>>> getAccountFollowers({
     final response = await http.get(
       uri,
       headers: {"Authorization": "Bearer $accessToken"},
-    );
+    )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () {
+            throw Exception(
+              "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            );
+          },
+        );
+    
 
     if (response.statusCode != 200) {
       throw Exception(
@@ -27,9 +37,7 @@ Future<List<Map<String, dynamic>>> getAccountFollowers({
     final data = jsonDecode(response.body);
 
     return (data as List).cast<Map<String, dynamic>>();
-  } catch (e) {
-    rethrow;
-  }
+ 
 }
 
 Future<List<Map<String, dynamic>>> getAccountFollowing({
@@ -38,15 +46,19 @@ Future<List<Map<String, dynamic>>> getAccountFollowing({
   required String accessToken,
   int limit = 40,
 }) async {
-  try {
     final uri = Uri.parse(
       "$instanceUrl/api/v1/accounts/$accountId/following",
     ).replace(queryParameters: {"limit": "$limit"});
-
-    final response = await http.get(
-      uri,
-      headers: {"Authorization": "Bearer $accessToken"},
-    );
+    final response = await http
+        .get(uri, headers: {"Authorization": "Bearer $accessToken"})
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () {
+            throw Exception(
+              "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            );
+          },
+        );
 
     if (response.statusCode != 200) {
       throw Exception(
@@ -57,9 +69,7 @@ Future<List<Map<String, dynamic>>> getAccountFollowing({
     final data = jsonDecode(response.body);
 
     return (data as List).cast<Map<String, dynamic>>();
-  } catch (e) {
-    rethrow;
-  }
+  
 }
 
 Future<void> updateProfile({
@@ -139,7 +149,15 @@ Future<void> updateProfile({
   }
 
   // Send request
-  final streamedResponse = await request.send();
+  final streamedResponse = await request.send().timeout(
+    API_TIMEOUT,
+    onTimeout: () {
+      throw Exception(
+        "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+      );
+    },
+  );
+  
   final response = await http.Response.fromStream(streamedResponse);
 
   if (response.statusCode != 200) {

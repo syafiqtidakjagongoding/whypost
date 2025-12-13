@@ -211,13 +211,7 @@ class _CommentListWidgetState extends ConsumerState<CommentListWidget> {
                                   icon: CupertinoIcons.reply,
                                   onTap: () {
                                     context.push(
-                                      Routes.addPost,
-                                      extra: {
-                                        'replyTo': c['id'],
-                                        'mention':
-                                            '$mention @${account['acct']}',
-                                        'isReply': true,
-                                      },
+                                      "/reply/${c['id']}?mention='$mention ${account['acct']}'",
                                     );
                                   },
                                 ),
@@ -430,50 +424,7 @@ class _CommentListWidgetState extends ConsumerState<CommentListWidget> {
           ),
         ),
 
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                final mention = originalPost != null
-                    ? '@${originalPost!['account']['acct']}'
-                    : '';
-
-                context.push(
-                  Routes.addPost,
-                  extra: {
-                    'replyTo': statusId,
-                    'mention': mention,
-                    'isReply': true,
-                  },
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Write a comment...',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 15),
-                      ),
-                    ),
-                    Icon(Icons.send, color: Colors.grey[400], size: 20),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+      
       ],
     );
   }

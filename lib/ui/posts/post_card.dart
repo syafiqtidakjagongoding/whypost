@@ -47,7 +47,11 @@ class _PostCardState extends ConsumerState<PostCard> {
         ListTile(
           leading: const Icon(Icons.edit, color: Colors.blue),
           title: const Text('Edit Post'),
-          onTap: () {},
+          onTap: () {
+            context.push(
+              "/edit-post/$postId",
+            );
+          },
         ),
       );
       menu.add(
@@ -94,6 +98,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                             backgroundColor: Colors.green,
                           ),
                         );
+                        ref.invalidate(statusesTimelineProvider(currentUserId!));
                       },
                       child: Text(
                         "Delete",
@@ -230,7 +235,7 @@ class _PostCardState extends ConsumerState<PostCard> {
           BoxShadow(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.black54
-                : const Color(0xFF94A3B8).withOpacity(0.2),
+                : Color(0xFF94A3B8).withOpacity(0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -443,12 +448,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                     icon: CupertinoIcons.reply,
                     onTap: () {
                       context.push(
-                        Routes.addPost,
-                        extra: {
-                          'replyTo': postId,
-                          'mention': '@${widget.account['acct']}',
-                          'isReply': true,
-                        },
+                        '/reply/$postId?mention=@${widget.account['acct']}',
                       );
                     },
                   ),

@@ -23,6 +23,7 @@ import 'package:app_links/app_links.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   await SharedPreferences.getInstance();
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -50,7 +51,6 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   Future<void> initDeepLinks() async {
     _sub = AppLinks().uriLinkStream.listen((uri) async {
-      debugPrint("Deep Link Triggered: $uri");
 
       final code = uri.queryParameters['code'];
       if (code != null) {
@@ -62,7 +62,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           final clientSecret = prefs.getString(_clientSecret);
 
           if (instanceUrl == null || clientId == null || clientSecret == null) {
-            debugPrint("❌ Data OAuth tidak lengkap");
+            debugPrint("❌ Oauth credentials missing");
             return;
           }
 
@@ -74,7 +74,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           );
 
           if (accToken == null || accToken.trim().isEmpty) {
-            debugPrint("❌ Gagal mendapatkan token. Body kosong.");
+            debugPrint("❌ Failed to retrieve token.");
             return;
           }
 
@@ -118,7 +118,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     return MaterialApp.router(
-      title: "WhyPost App",
+      title: "WhyPost",
       routerConfig: router,
       darkTheme: AppTheme.light,
       themeMode: themeMode,

@@ -1,67 +1,68 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:whypost/constant/config.dart';
 
 Future<List<Map<String, dynamic>>> fetchAllNotifications(
   String baseUrl,
   String accessToken,
 ) async {
-  try {
-    final uri = Uri.parse("$baseUrl/api/v1/notifications");
+  final uri = Uri.parse("$baseUrl/api/v1/notifications");
 
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception(
-        "Failed to load status detail: ${res.statusCode} - ${res.body}",
+  final res = await http
+      .get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Accept': 'application/json',
+        },
+      )
+      .timeout(
+        API_TIMEOUT,
+        onTimeout: () => throw Exception(
+          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+        ),
       );
-    }
 
-    final data = jsonDecode(res.body);
-
-    return (data as List).cast<Map<String, dynamic>>();
-  } catch (e) {
-    rethrow;
+  if (res.statusCode != 200) {
+    throw Exception(
+      "Failed to load notifications: ${res.statusCode} - ${res.body}",
+    );
   }
+
+  return (jsonDecode(res.body) as List).cast<Map<String, dynamic>>();
 }
 
 Future<List<Map<String, dynamic>>> fetchNotificationsByType(
   String baseUrl,
   String accessToken,
- String types
+  String types,
 ) async {
-  try {
-    final uri = Uri.parse("$baseUrl/api/v1/notifications").replace(
-      queryParameters: {
-        "types[]": types, 
-      },
-    );
+  final uri = Uri.parse(
+    "$baseUrl/api/v1/notifications",
+  ).replace(queryParameters: {"types[]": types});
 
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception(
-        "Failed to load status detail: ${res.statusCode} - ${res.body}",
+  final res = await http
+      .get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Accept': 'application/json',
+        },
+      )
+      .timeout(
+        API_TIMEOUT,
+        onTimeout: () => throw Exception(
+          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+        ),
       );
-    }
 
-    final data = jsonDecode(res.body);
-
-    return (data as List).cast<Map<String, dynamic>>();
-  } catch (e) {
-    rethrow;
+  if (res.statusCode != 200) {
+    throw Exception(
+      "Failed to load notifications: ${res.statusCode} - ${res.body}",
+    );
   }
+
+  return (jsonDecode(res.body) as List).cast<Map<String, dynamic>>();
 }
 
 Future<Map<String, dynamic>> fetchNotificationById(
@@ -69,25 +70,28 @@ Future<Map<String, dynamic>> fetchNotificationById(
   String accessToken,
   String id,
 ) async {
-  try {
-    final uri = Uri.parse("$baseUrl/api/v1/notification/$id");
+  final uri = Uri.parse("$baseUrl/api/v1/notification/$id");
 
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception(
-        "Failed to load status detail: ${res.statusCode} - ${res.body}",
+  final res = await http
+      .get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Accept': 'application/json',
+        },
+      )
+      .timeout(
+        API_TIMEOUT,
+        onTimeout: () => throw Exception(
+          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+        ),
       );
-    }
 
-    return jsonDecode(res.body);
-  } catch (e) {
-    rethrow;
+  if (res.statusCode != 200) {
+    throw Exception(
+      "Failed to load notification: ${res.statusCode} - ${res.body}",
+    );
   }
+
+  return jsonDecode(res.body);
 }

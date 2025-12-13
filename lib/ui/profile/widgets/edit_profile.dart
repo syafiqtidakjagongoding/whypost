@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whypost/api/accounts_api.dart';
+import 'package:whypost/service/htmlToText.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/state/account.dart';
-import 'package:html/parser.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
@@ -29,10 +29,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     load();
   }
 
-  String htmlToText(String html) {
-    final document = parse(html);
-    return document.body?.text ?? "";
-  }
+  
 
   Future<void> load() async {
     final user = await ref.read(currentUserProvider.future);
@@ -56,7 +53,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   Future<void> pickHeader() async {
     final XFile? picked = await _picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 90, // optional biar file lebih kecil
+      imageQuality: 90,
     );
 
     if (picked != null) {

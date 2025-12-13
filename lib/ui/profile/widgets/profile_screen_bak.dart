@@ -24,7 +24,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String? currentUserId;
-  late final ScrollController _scrollController;
   final ScrollController _statusesController = ScrollController();
   final ScrollController _statusesMediaController = ScrollController();
   final ScrollController _favouriteController = ScrollController();
@@ -33,7 +32,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void initState() {
     super.initState();
     load();
-    _scrollController = ScrollController();
     _statusesController.addListener(() {
       final notifier = ref.read(
         statusesTimelineProvider(widget.identifier!).notifier,
@@ -81,18 +79,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   @override
-  void dispose() {
-    _statusesController.dispose();
-    _statusesMediaController.dispose();
-    _bookmarkedController.dispose();
-    _favouriteController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  // Ganti struktur build-nya dengan ini:
-
-  @override
   Widget build(BuildContext context) {
     final userAsync = ref.watch(selectedUserProvider(widget.identifier!));
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -100,7 +86,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final unselectedColor = isDark
         ? Colors.white60
         : AppTheme.seed.withAlpha(200);
-
     ref.listen(relationshipProvider(widget.identifier!), (prev, next) {
       next.whenData((rel) {
         if (rel == null) return;
@@ -121,13 +106,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         }
       });
     });
-
     return Scaffold(
       body: userAsync.when(
         loading: () => Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text("Error: $e")),
         data: (user) {
           final userId = user!['id'];
+          // Watch timeline AFTER user successfully loaded
           final statusesAsync = ref.watch(statusesTimelineProvider(userId));
           final favouritedAsync = widget.identifier == currentUserId
               ? ref.watch(favouritedTimelineProvider)
@@ -145,16 +130,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
           return DefaultTabController(
             length: widget.identifier == currentUserId ? 4 : 3,
-            child: Column(
-              children: [
-                // HEADER - Scroll bersamaan dengan content
-                Expanded(
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      // ===== HEADER SECTION =====
-                      SliverToBoxAdapter(
-                        child: Stack(
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        // ===== HEADER =====
+                        Stack(
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,9 +232,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(height: 60),
+                                      const SizedBox(
+                                        height: 60,
+                                      ), // Space for avatar
+                                      // Display Name
                                       displayTitleWithEmoji(user, context),
+
                                       const SizedBox(height: 2),
+
+                                      // Username
                                       Text(
                                         "@${user['acct']}",
                                         style: TextStyle(
@@ -259,6 +248,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           fontSize: 15,
                                         ),
                                       ),
+
                                       const SizedBox(height: 12),
 
                                       // Bio
@@ -311,11 +301,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                             onPressed: () async {
                                               try {
                                                 if (isFollowed == true) {
+                                                  // ===== UNFOLLOW =====
                                                   final res = await ref.read(
                                                     unfollowUserProvider(
                                                       userId,
                                                     ).future,
                                                   );
+
                                                   ref
                                                       .read(
                                                         followProvider.notifier,
@@ -342,6 +334,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                         },
                                                       );
                                                 } else {
+                                                  // ===== FOLLOW =====
                                                   final res = await ref.read(
                                                     followUserProvider(
                                                       userId,
@@ -373,32 +366,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                         },
                                                       );
                                                 }
-                                                ref.invalidate(
-                                                  accountFollowingProvider(
-                                                    currentUserId!,
-                                                  ),
-                                                );
+
+                                                ref.invalidate(accountFollowingProvider(currentUserId!));
                                                 ref.invalidate(
                                                   relationshipProvider(
                                                     widget.identifier!,
                                                   ),
                                                 );
                                               } catch (e) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      "Something went wrong",
-                                                    ),
-                                                    backgroundColor: Colors.red,
-                                                    duration: const Duration(
-                                                      seconds: 3,
-                                                    ),
-                                                  ),
-                                                );
+                                                ScaffoldMessenger
+                                                    .of(context)
+                                                    .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          "Something went wrong",
+                                                        ),
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        duration:
+                                                            const Duration(
+                                                              seconds: 3,
+                                                            ),
+                                                      ),
+                                                    );
                                               }
                                             },
+                                            
                                             style: OutlinedButton.styleFrom(
                                               backgroundColor:
                                                   isFollowed == true
@@ -440,7 +433,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                             // Avatar positioned absolutely
                             Positioned(
-                              top: 115,
+                              top: 115, // Overlapping the header
                               left: 16,
                               child: Container(
                                 decoration: BoxDecoration(
@@ -468,415 +461,335 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                           ],
                         ),
-                      ),
 
-                      // ===== TAB BAR - Fixed position setelah scroll =====
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _StickyTabBarDelegate(
-                          TabBar(
-                            indicatorColor: selectedColor,
-                            labelColor: selectedColor,
-                            unselectedLabelColor: unselectedColor,
-                            tabs: [
-                              Tab(text: "Statuses"),
-                              Tab(
-                                text: widget.identifier == currentUserId
-                                    ? "Favourites"
-                                    : "Media",
-                              ),
-                              Tab(
-                                text: widget.identifier == currentUserId
-                                    ? "Saved"
-                                    : "About",
-                              ),
-                              if (widget.identifier == currentUserId)
-                                Tab(text: "About"),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // ===== TAB CONTENT =====
-                      SliverFillRemaining(
-                        hasScrollBody: true,
-                        child: TabBarView(
-                          children: [
-                            _buildStatusesTab(
-                              statusesAsync,
-                              userId,
-                              _statusesController,
-                              ref,
+                        // ===== TAB BAR =====
+                        TabBar(
+                          indicatorColor: selectedColor,
+                          labelColor: selectedColor,
+                          unselectedLabelColor: unselectedColor,
+                          tabs: [
+                            Tab(text: "Statuses"),
+                            Tab(
+                              text: widget.identifier == currentUserId
+                                  ? "Favourites"
+                                  : "Media",
                             ),
-                            _buildSecondTab(
-                              favouritedAsync,
-                              statusesOnlyMediaAsync,
-                              userId,
-                              widget.identifier!,
-                              currentUserId!,
-                              _favouriteController,
-                              _statusesMediaController,
-                              ref,
-                            ),
-                            _buildThirdTab(
-                              bookmarkedAsync,
-                              userAsync,
-                              widget.identifier!,
-                              currentUserId!,
-                              _bookmarkedController,
-                              ref,
+                            Tab(
+                              text: widget.identifier == currentUserId
+                                  ? "Saved"
+                                  : "About",
                             ),
                             if (widget.identifier == currentUserId)
-                              _buildAboutTab(
-                                userAsync,
-                                widget.identifier!,
-                                ref,
-                              ),
+                              Tab(text: "About"),
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                ];
+              },
+
+              // ===== TAB VIEW =====
+              body: SafeArea(
+                top: false,
+                bottom: true,
+                child: TabBarView(
+                  children: [
+                    // ==== TAB 1: STATUS ====
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        ref.invalidate(statusesTimelineProvider(userId));
+                      },
+                      child: Builder(
+                        builder: (context) {
+                          final state = statusesAsync;
+                          if (state.isLoading && state.posts.isEmpty) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          // ---- NO DATA ----
+                          if (state.posts.isEmpty) {
+                            return const Center(
+                              child: Text("No posts available"),
+                            );
+                          }
+
+                          return ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            itemCount: state.posts.length,
+                            controller: _statusesController,
+                            itemBuilder: (context, i) {
+                              final post = state.posts[i];
+
+                              final isReblog = post['reblog'] != null;
+
+                              final displayPost = isReblog
+                                  ? post['reblog'] as Map<String, dynamic>
+                                  : post;
+
+                              final displayAccount = isReblog
+                                  ? post['reblog']['account']
+                                  : post['account'];
+
+                              final createdAt = displayPost['created_at'];
+                              final timeAgo = createdAt != null
+                                  ? timeago.format(DateTime.parse(createdAt))
+                                  : '';
+
+                              return PostCard(
+                                post: displayPost,
+                                account: displayAccount,
+                                timeAgo: timeAgo,
+                                isReblog: isReblog,
+                                rebloggedBy: isReblog ? post['account'] : null,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+
+                    // ==== TAB 2: FAVOURITES / MEDIA ====
+                    if (widget.identifier == currentUserId)
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(favouritedTimelineProvider);
+                        },
+                        child: favouritedAsync.when(
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (e, _) => Center(child: Text("Failed to load favourite timeline")),
+                          data: (posts) {
+                            if (posts.isEmpty) {
+                              return const Center(
+                                child: Text("No liked posts yet"),
+                              );
+                            }
+
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              itemCount: posts.length,
+                              controller: _favouriteController,
+                              itemBuilder: (context, i) {
+                                final post = posts[i];
+
+                                final isReblog = post['reblog'] != null;
+
+                                final displayPost = isReblog
+                                    ? post['reblog'] as Map<String, dynamic>
+                                    : post;
+
+                                final displayAccount = isReblog
+                                    ? post['reblog']['account']
+                                    : post['account'];
+
+                                final createdAt = displayPost['created_at'];
+                                final timeAgo = createdAt != null
+                                    ? timeago.format(DateTime.parse(createdAt))
+                                    : '';
+
+                                return PostCard(
+                                  post: displayPost,
+                                  account: displayAccount,
+                                  timeAgo: timeAgo,
+                                  isReblog: isReblog,
+                                  rebloggedBy: isReblog
+                                      ? post['account']
+                                      : null,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+
+                    if (widget.identifier != currentUserId)
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(statusesMediaTimelineProvider(userId));
+                        },
+                        child: Builder(
+                          builder: (context) {
+                            final state = statusesOnlyMediaAsync;
+                            
+                            if (state.isLoading && state.posts.isEmpty) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            // ---- NO DATA ----
+                            if (state.posts.isEmpty) {
+                              return const Center(
+                                child: Text("No posts available"),
+                              );
+                            }
+
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              controller: _statusesMediaController,
+                              itemCount: state.posts.length,
+                              itemBuilder: (context, i) {
+                                final post = state.posts[i];
+
+                                final isReblog = post['reblog'] != null;
+
+                                final displayPost = isReblog
+                                    ? post['reblog'] as Map<String, dynamic>
+                                    : post;
+
+                                final displayAccount = isReblog
+                                    ? post['reblog']['account']
+                                    : post['account'];
+
+                                final createdAt = displayPost['created_at'];
+                                final timeAgo = createdAt != null
+                                    ? timeago.format(DateTime.parse(createdAt))
+                                    : '';
+
+                                return PostCard(
+                                  post: displayPost,
+                                  account: displayAccount,
+                                  timeAgo: timeAgo,
+                                  isReblog: isReblog,
+                                  rebloggedBy: isReblog
+                                      ? post['account']
+                                      : null,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+
+                    // ==== TAB 3: BOOKMARKS / ABOUT ====
+                    if (widget.identifier == currentUserId)
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(bookmarkedTimelineProvider);
+                        },
+                        child: bookmarkedAsync.when(
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (e, _) => Center(child: Text("Failed to load bookmarked timeline")),
+                          data: (posts) {
+                            if (posts.isEmpty) {
+                              return const Center(
+                                child: Text("No bookmarked posts yet"),
+                              );
+                            }
+
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              itemCount: posts.length,
+                              controller: _bookmarkedController,
+                              itemBuilder: (context, i) {
+                                final post = posts[i];
+
+                                final isReblog = post['reblog'] != null;
+
+                                final displayPost = isReblog
+                                    ? post['reblog'] as Map<String, dynamic>
+                                    : post;
+
+                                final displayAccount = isReblog
+                                    ? post['account']
+                                    : post['account'];
+
+                                final createdAt = displayPost['created_at'];
+                                final timeAgo = createdAt != null
+                                    ? timeago.format(DateTime.parse(createdAt))
+                                    : '';
+
+                                return PostCard(
+                                  post: displayPost,
+                                  account: displayAccount,
+                                  timeAgo: timeAgo,
+                                  isReblog: isReblog,
+                                  rebloggedBy: isReblog
+                                      ? post['account']
+                                      : null,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+
+                    if (widget.identifier != currentUserId)
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(
+                            selectedUserProvider(widget.identifier!),
+                          );
+                        },
+                        child: userAsync.when(
+                          data: (user) {
+                            if (user!.isEmpty) {
+                              return Text("User error");
+                            }
+                            return SafeArea(
+                              top: false,
+                              bottom: true,
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: UserInfoTextCard(account: user),
+                              ),
+                            );
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (e, _) => Center(child: Text("Failed to load user info")),
+                        ),
+                      ),
+
+                    // ==== TAB 4: ABOUT (for current user) ====
+                    if (widget.identifier == currentUserId)
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          ref.invalidate(
+                            selectedUserProvider(widget.identifier!),
+                          );
+                        },
+                        child: userAsync.when(
+                          data: (user) {
+                            if (user!.isEmpty) {
+                              return Text("User error");
+                            }
+                            return SafeArea(
+                              top: false,
+                              bottom: true,
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: UserInfoTextCard(account: user),
+                              ),
+                            );
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (e, _) => Center(child: Text("Faile to load user")),
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            heroTag: 'scrollTop',
-            mini: true,
-            onPressed: () {
-              _scrollController.animateTo(
-                0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
-            },
-            child: Icon(
-              Icons.keyboard_arrow_up,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black
-                  : Colors.white,
-            ),
-          ),
-          const SizedBox(height: 12),
-          FloatingActionButton(
-            heroTag: 'addPost',
-            onPressed: () => context.push(Routes.addPost),
-            child: Icon(
-              Icons.add,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black
-                  : Colors.white,
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push(Routes.addPost),
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
+        ),
       ),
     );
   }
-}
-
-// Helper: Sticky TabBar Delegate
-class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar tabBar;
-
-  _StickyTabBarDelegate(this.tabBar);
-
-  @override
-  double get minExtent => tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_StickyTabBarDelegate oldDelegate) {
-    return tabBar != oldDelegate.tabBar;
-  }
-}
-
-// Helper methods untuk build tabs (extract dari code lama)
-Widget _buildStatusesTab(
-  TimelineState statusesAsync,
-  String userId,
-  ScrollController statusesController,
-  WidgetRef ref,
-) {
-  return RefreshIndicator(
-    onRefresh: () async {
-      ref.invalidate(statusesTimelineProvider(userId));
-    },
-    child: Builder(
-      builder: (context) {
-        final state = statusesAsync;
-        if (state.isLoading && state.posts.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.posts.isEmpty) {
-          return const Center(child: Text("No posts available"));
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          itemCount: state.posts.length,
-          controller: statusesController,
-          itemBuilder: (context, i) {
-            final post = state.posts[i];
-            final isReblog = post['reblog'] != null;
-            final displayPost = isReblog
-                ? post['reblog'] as Map<String, dynamic>
-                : post;
-            final displayAccount = isReblog
-                ? post['reblog']['account']
-                : post['account'];
-            final createdAt = displayPost['created_at'];
-            final timeAgo = createdAt != null
-                ? timeago.format(DateTime.parse(createdAt))
-                : '';
-
-            return PostCard(
-              post: displayPost,
-              account: displayAccount,
-              timeAgo: timeAgo,
-              isReblog: isReblog,
-              rebloggedBy: isReblog ? post['account'] : null,
-            );
-          },
-        );
-      },
-    ),
-  );
-}
-
-Widget _buildSecondTab(
-  AsyncValue<List<dynamic>> favouritedAsync,
-  TimelineState statusesOnlyMediaAsync,
-  String userId,
-  String identifier,
-  String currentUserId,
-  ScrollController favouriteController,
-  ScrollController statusesMediaController,
-  WidgetRef ref,
-) {
-  if (identifier == currentUserId) {
-    // Favourites tab
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(favouritedTimelineProvider);
-      },
-      child: favouritedAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text("Failed to load favourite timeline")),
-        data: (posts) {
-          if (posts.isEmpty) {
-            return const Center(child: Text("No liked posts yet"));
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            itemCount: posts.length,
-            controller: favouriteController,
-            itemBuilder: (context, i) {
-              final post = posts[i];
-              final isReblog = post['reblog'] != null;
-              final displayPost = isReblog
-                  ? post['reblog'] as Map<String, dynamic>
-                  : post;
-              final displayAccount = isReblog
-                  ? post['reblog']['account']
-                  : post['account'];
-              final createdAt = displayPost['created_at'];
-              final timeAgo = createdAt != null
-                  ? timeago.format(DateTime.parse(createdAt))
-                  : '';
-
-              return PostCard(
-                post: displayPost,
-                account: displayAccount,
-                timeAgo: timeAgo,
-                isReblog: isReblog,
-                rebloggedBy: isReblog ? post['account'] : null,
-              );
-            },
-          );
-        },
-      ),
-    );
-  } else {
-    // Media tab
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(statusesMediaTimelineProvider(userId));
-      },
-      child: Builder(
-        builder: (context) {
-          final state = statusesOnlyMediaAsync;
-
-          if (state.isLoading && state.posts.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.posts.isEmpty) {
-            return const Center(child: Text("No posts available"));
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            controller: statusesMediaController,
-            itemCount: state.posts.length,
-            itemBuilder: (context, i) {
-              final post = state.posts[i];
-              final isReblog = post['reblog'] != null;
-              final displayPost = isReblog
-                  ? post['reblog'] as Map<String, dynamic>
-                  : post;
-              final displayAccount = isReblog
-                  ? post['reblog']['account']
-                  : post['account'];
-              final createdAt = displayPost['created_at'];
-              final timeAgo = createdAt != null
-                  ? timeago.format(DateTime.parse(createdAt))
-                  : '';
-
-              return PostCard(
-                post: displayPost,
-                account: displayAccount,
-                timeAgo: timeAgo,
-                isReblog: isReblog,
-                rebloggedBy: isReblog ? post['account'] : null,
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-Widget _buildThirdTab(
-  AsyncValue<List<dynamic>> bookmarkedAsync,
-  AsyncValue<Map<String, dynamic>?> userAsync,
-  String identifier,
-  String currentUserId,
-  ScrollController _bookmarkedController,
-  WidgetRef ref,
-) {
-  if (identifier == currentUserId) {
-    // Bookmarks tab
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(bookmarkedTimelineProvider);
-      },
-      child: bookmarkedAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text("Failed to load bookmarked timeline")),
-        data: (posts) {
-          if (posts.isEmpty) {
-            return const Center(child: Text("No bookmarked posts yet"));
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            itemCount: posts.length,
-            controller: _bookmarkedController,
-            itemBuilder: (context, i) {
-              final post = posts[i];
-              final isReblog = post['reblog'] != null;
-              final displayPost = isReblog
-                  ? post['reblog'] as Map<String, dynamic>
-                  : post;
-              final displayAccount = isReblog
-                  ? post['account']
-                  : post['account'];
-              final createdAt = displayPost['created_at'];
-              final timeAgo = createdAt != null
-                  ? timeago.format(DateTime.parse(createdAt))
-                  : '';
-
-              return PostCard(
-                post: displayPost,
-                account: displayAccount,
-                timeAgo: timeAgo,
-                isReblog: isReblog,
-                rebloggedBy: isReblog ? post['account'] : null,
-              );
-            },
-          );
-        },
-      ),
-    );
-  } else {
-    // About tab
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(selectedUserProvider(identifier));
-      },
-      child: userAsync.when(
-        data: (user) {
-          if (user!.isEmpty) {
-            return Text("User error");
-          }
-          return SafeArea(
-            top: false,
-            bottom: true,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: UserInfoTextCard(account: user),
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Failed to load user info")),
-      ),
-    );
-  }
-}
-
-Widget _buildAboutTab(
-  AsyncValue<Map<String, dynamic>?> userAsync,
-  String identifier,
-  WidgetRef ref,
-) {
-  return RefreshIndicator(
-    onRefresh: () async {
-      ref.invalidate(selectedUserProvider(identifier));
-    },
-    child: userAsync.when(
-      data: (user) {
-        if (user!.isEmpty) {
-          return Text("User error");
-        }
-         return SafeArea(
-          top: false,
-          bottom: true,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: UserInfoTextCard(account: user),
-          ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text("Failed to load user")),
-    ),
-  );
 }
 
 Widget displayTitleWithEmoji(

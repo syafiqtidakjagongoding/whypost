@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whypost/api/notifications_api.dart';
-import 'package:whypost/api/relationship_api.dart';
-import 'package:whypost/api/user_api.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 
 final notificationsProvider = FutureProvider<List<Map<String, dynamic>>>((

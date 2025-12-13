@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whypost/api/accounts_api.dart';
-import 'package:whypost/sharedpreferences/credentials.dart';
+
 import 'package:whypost/state/account.dart';
-import 'package:whypost/ui/utils/ListTile.dart';
+import 'package:whypost/ui/utils/PeopleListTile.dart';
 
 class FollowScreen extends ConsumerStatefulWidget {
   final String type; // followers / following
@@ -42,7 +41,7 @@ class _FollowScreenState extends ConsumerState<FollowScreen> {
       ),
       body: asyncItems.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, st) => Center(child: Text("Error")),
+        error: (err, st) => Center(child: Text("Error when fetching your relationship")),
         data: (items) {
           return ListView.builder(
             itemCount: items.length + 1,

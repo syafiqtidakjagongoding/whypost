@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:whypost/constant/config.dart';
 
 Future<List<CustomEmoji>> fetchCustomEmojis(
   String baseUrl,
   String token,
 ) async {
-  try {
+
     final url = Uri.parse("$baseUrl/api/v1/custom_emojis");
 
     final headers = {
@@ -13,7 +14,16 @@ Future<List<CustomEmoji>> fetchCustomEmojis(
       "Authorization": "Bearer $token",
     };
 
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(url, headers: headers)
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () {
+            throw Exception(
+              "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            );
+          },
+        );
+    ;
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
@@ -21,9 +31,7 @@ Future<List<CustomEmoji>> fetchCustomEmojis(
     } else {
       throw Exception("Failed to load custom emojis: ${response.statusCode}");
     }
-  } catch (e) {
-    rethrow;
-  }
+ 
 }
 
 class CustomEmoji {

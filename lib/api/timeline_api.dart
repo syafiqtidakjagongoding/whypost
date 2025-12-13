@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:whypost/constant/config.dart';
 
 Future<List<dynamic>> fetchHomeTimeline(
   String baseUrl,
@@ -18,13 +18,20 @@ Future<List<dynamic>> fetchHomeTimeline(
   );
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load home timeline: ${res.body}");
@@ -32,7 +39,6 @@ Future<List<dynamic>> fetchHomeTimeline(
 
     return jsonDecode(res.body);
   } catch (e) {
-    print(e);
     rethrow;
   }
 }
@@ -53,13 +59,20 @@ Future<List<dynamic>> fetchPublicFederatedTimeline(
   );
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load federated timeline: ${res.body}");
@@ -88,13 +101,20 @@ Future<List<dynamic>> fetchPublicLocalTimeline(
   );
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load local timeline: ${res.body}");
@@ -123,13 +143,20 @@ Future<List<dynamic>> fetchTagTimeline(
   );
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load tag timeline: ${res.body}");
@@ -152,13 +179,20 @@ Future<List<dynamic>> fetchFavouritedUser(
   );
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load favourites: ${res.body}");
@@ -181,13 +215,20 @@ Future<List<dynamic>> fetchBookmarkedUser(
   ).replace(queryParameters: {'max_id': maxId, 'since_id': sinceId});
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load bookmarks: ${res.body}");
@@ -210,13 +251,20 @@ Future<List<dynamic>> fetchTrendingPost(
   );
 
   try {
-    final res = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Accept': 'application/json',
-      },
-    );
+    final res = await http
+        .get(
+          uri,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(
+          API_TIMEOUT,
+          onTimeout: () => throw Exception(
+            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          ),
+        );
 
     if (res.statusCode != 200) {
       throw Exception("Failed to load trending posts: ${res.body}");

@@ -75,18 +75,31 @@ final router = GoRouter(
         return ViewpostScreen(postId: postId);
       },
     ),
+  // Create post route
     GoRoute(
       path: Routes.addPost,
-      builder: (context, state) {
-        final extra = (state.extra is Map<String, dynamic>)
-            ? state.extra as Map<String, dynamic>
-            : <String, dynamic>{};
+      builder: (context, state) => AddPostWidget.create(),
+    ),
 
-        return AddPostWidget(
-          replyContext: extra,
-          replyTo: extra['replyTo'],
-          mention: extra['mention'],
-          isReply: extra['isReply'] ?? false,
+    // Reply route with parameters
+    GoRoute(
+      path: '/reply/:postId',
+      builder: (context, state) {
+        final postId = state.pathParameters['postId']!;
+        final mention = state.uri.queryParameters['mention'] ?? '';
+
+        return AddPostWidget.reply(replyToId: postId, replyToMention: mention);
+      },
+    ),
+
+    // Edit route with parameters
+    GoRoute(
+      path: '/edit-post/:postId',
+      builder: (context, state) {
+        final postId = state.pathParameters['postId']!;
+
+        return AddPostWidget.edit(
+          editPostId: postId,
         );
       },
     ),

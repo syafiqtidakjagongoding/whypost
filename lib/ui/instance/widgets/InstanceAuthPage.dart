@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:whypost/constant/config.dart';
 import 'package:whypost/constant/instanceConfig.dart';
-import 'package:whypost/routing/routes.dart';
-import 'package:whypost/state/instance.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/ui/instance/widgets/RulesRenderer.dart';
 import 'package:whypost/ui/utils/InstanceLink.dart';
@@ -37,7 +35,7 @@ class _InstanceAuthPage extends ConsumerState<InstanceAuthPage> {
         appRegUrl,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'client_name': 'WhyPost',
+          'client_name': CLIENT_NAME,
           'redirect_uris': REDIRECT_URL,
           'scopes': INSTANCE_SCOPE,
         }),

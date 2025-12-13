@@ -2,8 +2,6 @@
 // 1. MAIN SEARCH SCREEN
 // ==========================================
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,9 +13,9 @@ import 'package:whypost/state/explore.dart';
 import 'package:whypost/state/timeline.dart';
 import 'package:whypost/state/trends.dart';
 import 'package:whypost/ui/posts/post_card.dart';
-import 'package:whypost/ui/utils/ListTile.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:whypost/ui/utils/PeopleListTile.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -361,7 +359,7 @@ class _PostsTabState extends ConsumerState<PostsTab> {
       return altPost.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, st) =>
-            const Center(child: Text("Error: Failed to load alternate posts")),
+            const Center(child: Text("Failed to load alternate posts")),
         data: (posts) {
           if (posts.isEmpty) {
             return const Center(child: Text("There are no alternate posts"));
@@ -376,7 +374,7 @@ class _PostsTabState extends ConsumerState<PostsTab> {
 
     return results.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => const Center(child: Text("Error: Failed to search")),
+      error: (e, st) => const Center(child: Text("Failed to search posts")),
       data: (data) {
         final statuses = (data["statuses"] is List)
             ? data["statuses"]
@@ -428,7 +426,7 @@ class TagsTab extends ConsumerWidget {
       return results.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, st) =>
-            const Center(child: Text("Error: Failed to load hashtags")),
+            const Center(child: Text("Failed to load hashtags")),
         data: (data) {
           final tags = (data["hashtags"] is List)
               ? data["hashtags"]
@@ -456,7 +454,7 @@ class TagsTab extends ConsumerWidget {
       return trendingTags.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, st) =>
-            const Center(child: Text("Error: Failed to load trending tags")),
+            const Center(child: Text("Failed to load trending tags")),
         data: (list) {
           if (list.isEmpty) {
             return const Center(child: Text("Trending tags are empty"));
@@ -476,7 +474,7 @@ class TagsTab extends ConsumerWidget {
     return results.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) =>
-          const Center(child: Text("Error: Failed to load hashtags")),
+          const Center(child: Text("Failed to load hashtags")),
       data: (data) {
         final tags = (data["hashtags"] is List)
             ? data["hashtags"]
@@ -511,7 +509,7 @@ class PeopleTab extends ConsumerWidget {
       return suggested.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, st) =>
-            const Center(child: Text("Error: Failed to load suggested people")),
+            const Center(child: Text("Failed to load suggested people")),
         data: (list) {
           if (list.isEmpty) {
             return const Center(child: Text("No suggested people available"));
@@ -527,7 +525,7 @@ class PeopleTab extends ConsumerWidget {
     return results.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) =>
-          const Center(child: Text("Error: Failed to find people")),
+          const Center(child: Text("Failed to find people")),
       data: (data) {
         final accounts = (data["accounts"] is List)
             ? data["accounts"]
@@ -557,7 +555,7 @@ class LinksTab extends ConsumerWidget {
     return trendingLinks.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) =>
-          const Center(child: Text("Error: Failed to load trending links")),
+          const Center(child: Text("Failed to load trending links")),
       data: (list) {
         if (list.isEmpty) {
           return const Center(child: Text("Couldn't find trending links"));

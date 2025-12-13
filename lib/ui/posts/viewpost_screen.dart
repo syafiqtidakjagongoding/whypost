@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:whypost/api/statuses_api.dart';
-import 'package:whypost/routing/routes.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/state/timeline.dart';
 import 'package:whypost/ui/posts/post_media.dart';
 import 'package:whypost/ui/utils/ContentParsing.dart';
-import 'package:whypost/ui/utils/commentList.dart';
+import 'package:whypost/ui/posts/commentList.dart';
 import 'package:whypost/ui/utils/displayNameWithEmoji.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whypost/state/action.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:whypost/ui/utils/ActionButton.dart';
 
 class ViewpostScreen extends ConsumerStatefulWidget {
   final String postId;
@@ -40,7 +38,9 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
         ListTile(
           leading: const Icon(Icons.edit, color: Colors.blue),
           title: const Text('Edit Post'),
-          onTap: () {},
+          onTap: () {
+            context.push("/edit-post/$postId");
+          },
         ),
       );
       menu.add(
@@ -67,7 +67,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        Navigator.pop(ctx); // close dialog
+                        context.pop();
 
                         final cred =
                             await CredentialsRepository.loadCredentials();
@@ -75,7 +75,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                         await deleteStatusesById(
                           cred.instanceUrl!,
                           cred.accToken!,
-                          postId, // <-- ganti dengan id postinganmu
+                          postId,
                         );
                         final messenger = ScaffoldMessenger.of(context);
                         messenger.showSnackBar(
@@ -144,18 +144,33 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
   }
 
   Future<void> load() async {
-    final cred = await CredentialsRepository.loadAllCredentials();
-    if (cred.accToken != null && cred.instanceUrl != null) {
-      final result = await fetchStatusDetail(
-        cred.instanceUrl!,
-        cred.accToken!,
-        widget.postId,
+    try {
+      final cred = await CredentialsRepository.loadAllCredentials();
+      if (cred.accToken != null && cred.instanceUrl != null) {
+        final result = await fetchStatusDetail(
+          cred.instanceUrl!,
+          cred.accToken!,
+          widget.postId,
+        );
+
+        if (!mounted) return;
+
+        setState(() {
+          currentUserId = cred.currentUserId;
+          post = result;
+          account = result['account'];
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to load post"),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
       );
-      setState(() {
-        currentUserId = cred.currentUserId;
-        post = result;
-        account = result['account'];
-      });
     }
   }
 
@@ -177,7 +192,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
     final timeAgo = createdAt != null
         ? timeago.format(DateTime.parse(createdAt))
         : '';
-    // Initialize favouriteProvider jika belum ada
+
     if (!favourite.containsKey(widget.postId)) {
       Future.microtask(() {
         ref
@@ -223,7 +238,6 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🧍 Header Post (Profile + Username + Waktu)
               InkWell(
                 onTap: () {
                   context.push('/user/${account!['id']}');
@@ -273,13 +287,10 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                                   );
                                 },
                                 child: const Padding(
-                                  padding: EdgeInsets.all(
-                                    4.0,
-                                  ), // kecilin area sentuh
+                                  padding: EdgeInsets.all(4.0),
                                   child: Icon(
                                     Icons.more_vert,
-                                    size:
-                                        18, // kecilin biar proporsional dengan teks
+                                    size: 18,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -332,12 +343,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                     icon: CupertinoIcons.reply,
                     onTap: () {
                       context.push(
-                        Routes.addPost,
-                        extra: {
-                          'replyTo': widget.postId,
-                          'mention': '@${account!['acct']}',
-                          'isReply': true,
-                        },
+                        "/reply/${widget.postId}?mention=${account!['acct']}",
                       );
                     },
                   ),
@@ -466,7 +472,85 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
 
               // 🗨️ Contoh Komentar (bisa diganti ListView.builder)
               CommentListWidget(statusId: widget.postId, originalPost: post),
+              // Positioned(
+              //   left: 0,
+              //   right: 0,
+              //   bottom: 0,
+              //   child: SafeArea(
+              //     child: GestureDetector(
+              //       onTap: () {
+              //         final mention = post != null
+              //             ? '@${post!['account']['acct']}'
+              //             : '';
+
+              //         context.push("/reply/${post!['id']}?mention=$mention");
+              //       },
+              //       child: Container(
+              //         padding: const EdgeInsets.symmetric(
+              //           horizontal: 16,
+              //           vertical: 12,
+              //         ),
+              //         decoration: BoxDecoration(
+              //           color: Colors.grey[100],
+              //           borderRadius: BorderRadius.circular(24),
+              //         ),
+              //         child: Row(
+              //           children: [
+              //             Expanded(
+              //               child: Text(
+              //                 'Write a comment...',
+              //                 style: TextStyle(
+              //                   color: Colors.grey[600],
+              //                   fontSize: 15,
+              //                 ),
+              //               ),
+              //             ),
+              //             Icon(Icons.send, color: Colors.grey[400], size: 20),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
+          ),
+        ),
+      ),
+       bottomNavigationBar: SafeArea(
+         child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: GestureDetector(
+            onTap: () {
+              final mention = post != null
+                  ? '@${post!['account']['acct']}'
+                  : '';
+              context.push("/reply/${post!['id']}?mention=$mention");
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Write a comment...',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                    ),
+                  ),
+                  Icon(Icons.send, color: Colors.grey[400], size: 20),
+                ],
+              ),
+            ),
           ),
         ),
       ),
