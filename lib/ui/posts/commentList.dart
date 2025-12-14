@@ -211,7 +211,7 @@ class _CommentListWidgetState extends ConsumerState<CommentListWidget> {
                                   icon: CupertinoIcons.reply,
                                   onTap: () {
                                     context.push(
-                                      "/reply/${c['id']}?mention='$mention ${account['acct']}'",
+                                      "/reply/${c['id']}?mention=$mention ${account['acct']}",
                                     );
                                   },
                                 ),

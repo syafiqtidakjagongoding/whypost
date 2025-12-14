@@ -61,10 +61,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         newHeaderPath = picked.path;
       });
 
-      debugPrint("Picked new header: $newHeaderPath");
-    } else {
-      debugPrint("User canceled header picker");
-    }
+    } 
   }
 
   Future<void> pickAvatar() async {
@@ -78,19 +75,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         newAvatarPath = picked.path;
       });
 
-      debugPrint("Picked new avatar: $newAvatarPath");
-    } else {
-      debugPrint("User canceled avatar picker");
-    }
+    } 
   }
 
   Future<void> saveProfile() async {
     try {
-      debugPrint("Saving profile...");
-      debugPrint("Name: ${_nameController.text}");
-      debugPrint("Bio: ${_bioController.text}");
-      debugPrint("New Header Path: $newHeaderPath");
-      debugPrint("New Avatar Path: $newAvatarPath");
 
       final cred = await CredentialsRepository.loadCredentials();
       await updateProfile(

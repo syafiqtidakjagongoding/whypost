@@ -48,7 +48,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
           leading: const Icon(Icons.delete, color: Colors.red),
           title: const Text('Delete Post'),
           onTap: () {
-            Navigator.pop(context); // tutup bottom sheet/menu dulu
+            Navigator.pop(context);
 
             showDialog(
               context: context,
@@ -61,7 +61,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(ctx); // close dialog
+                        Navigator.pop(ctx);
                       },
                       child: const Text("Cancel"),
                     ),
@@ -244,76 +244,109 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(
+             InkWell(
                 onTap: () {
                   context.push('/user/${account!['id']}');
                 },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(account!['avatar_static']),
-                      radius: 22,
-                      backgroundColor: Colors.grey[200],
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              displayNameWithEmoji(account!, context),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  "@${account!['acct']}",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return SafeArea(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: buildPostMenu(
-                                            account!['id'].toString() ==
-                                                currentUserId.toString(),
-                                            isBookmarked,
-                                            post!['id'],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.more_vert,
-                                    size: 18,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(255, 117, 31, 1),
+                              Color.fromRGBO(255, 117, 31, 0.6),
                             ],
                           ),
-                          Text(
-                            timeAgo,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
                           ),
-                        ],
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              account!['avatar_static'],
+                            ),
+                            radius: 22,
+                            backgroundColor: Colors.grey[200],
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            displayNameWithEmoji(account!, context),
+                            const SizedBox(height: 2),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "@${account!['acct']}",
+                                    style: TextStyle(fontSize: 13),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                if (timeAgo != "") ...[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                    ),
+                                    child: Text(
+                                      "•",
+                                      style: TextStyle(color: Colors.grey[400]),
+                                    ),
+                                  ),
+                                  Text(
+                                    timeAgo,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      IconButton(
+                        icon: Icon(Icons.more_horiz, color: Colors.grey[600]),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(15),
+                              ),
+                            ),
+                            builder: (context) => Container(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: buildPostMenu(
+                                  account!['id'].toString() ==
+                                      currentUserId.toString(),
+                                  isBookmarked,
+                                  post!['id'],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -349,7 +382,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                     icon: CupertinoIcons.reply,
                     onTap: () {
                       context.push(
-                        "/reply/${widget.postId}?mention=${account!['acct']}",
+                        "/reply/${widget.postId}?mention=@${account!['acct']}",
                       );
                     },
                   ),
@@ -476,48 +509,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                 endIndent: 10,
               ),
 
-              // 🗨️ Contoh Komentar (bisa diganti ListView.builder)
               CommentListWidget(statusId: widget.postId, originalPost: post),
-              // Positioned(
-              //   left: 0,
-              //   right: 0,
-              //   bottom: 0,
-              //   child: SafeArea(
-              //     child: GestureDetector(
-              //       onTap: () {
-              //         final mention = post != null
-              //             ? '@${post!['account']['acct']}'
-              //             : '';
-
-              //         context.push("/reply/${post!['id']}?mention=$mention");
-              //       },
-              //       child: Container(
-              //         padding: const EdgeInsets.symmetric(
-              //           horizontal: 16,
-              //           vertical: 12,
-              //         ),
-              //         decoration: BoxDecoration(
-              //           color: Colors.grey[100],
-              //           borderRadius: BorderRadius.circular(24),
-              //         ),
-              //         child: Row(
-              //           children: [
-              //             Expanded(
-              //               child: Text(
-              //                 'Write a comment...',
-              //                 style: TextStyle(
-              //                   color: Colors.grey[600],
-              //                   fontSize: 15,
-              //                 ),
-              //               ),
-              //             ),
-              //             Icon(Icons.send, color: Colors.grey[400], size: 20),
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

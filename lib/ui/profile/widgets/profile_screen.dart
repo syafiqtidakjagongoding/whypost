@@ -188,20 +188,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     ),
 
                                     // Back Button
-                                    if (widget.identifier != currentUserId)
-                                      Positioned(
-                                        top: 12,
-                                        left: 8,
-                                        child: IconButton(
-                                          icon: const Icon(Icons.arrow_back),
-                                          onPressed: () => context.pop(),
-                                          style: IconButton.styleFrom(
-                                            backgroundColor: Colors.black
-                                                .withOpacity(0.6),
-                                            foregroundColor: Colors.white,
-                                          ),
+                                    Positioned(
+                                      top: 12,
+                                      left: 8,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.arrow_back),
+                                        onPressed: () => context.pop(),
+                                        style: IconButton.styleFrom(
+                                          backgroundColor: Colors.black
+                                              .withOpacity(0.6),
+                                          foregroundColor: Colors.white,
                                         ),
                                       ),
+                                    ),
 
                                     if (widget.identifier == currentUserId)
                                       Positioned(
@@ -864,7 +863,7 @@ Widget _buildAboutTab(
         if (user!.isEmpty) {
           return Text("User error");
         }
-         return SafeArea(
+        return SafeArea(
           top: false,
           bottom: true,
           child: SingleChildScrollView(

@@ -69,6 +69,77 @@ Overview app
 Prebuilt APKs are available on Codeberg Releases:
 https://codeberg.org/whypost/whypost-mobile/releases
 
+
+## Build / Run  Locally
+
+Clone the project
+
+```bash
+  git clone https://codeberg.org/whypost/whypost-mobile.git
+```
+
+Go to the project directory
+
+```bash
+  cd whypost-mobile
+```
+
+### Ensure Flutter is installed
+
+If you don't have Flutter installed, follow the official guide:
+[Download flutter](https://docs.flutter.dev/get-started/quick)
+
+```bash
+  flutter --version
+```
+
+Install required dependencies
+
+```bash
+  flutter pub get
+```
+
+### Ensure an Android device is connected
+
+Make sure an Android emulator is running or a physical device is connected.
+
+Check connected devices:
+```bash
+flutter devices
+```
+
+### Run the app (debug mode)
+
+``` bash
+flutter run
+```
+
+### Build APK
+
+Build release APK
+
+```bash
+flutter build apk --release
+```
+
+The APK will be generated at:
+```bash
+build/app/outputs/flutter-apk/app-release.apk
+```
+
+### Install APK to device
+Install using Flutter
+
+```bash
+flutter install
+```
+Or install manually using ADB:
+```bash
+adb install build/app/outputs/flutter-apk/app-release.apk
+```
+
+
+
 ## Documentation
 
 ## 🌐 What is the Fediverse?

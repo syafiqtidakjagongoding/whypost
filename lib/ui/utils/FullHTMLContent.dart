@@ -82,7 +82,6 @@ class _FullHTMLContentState extends State<FullHTMLContent> {
     if (text.startsWith('#')) {
       final tag = text.substring(1);
 
-      print(text);
       context.push("/tags/$tag");
       return;
     }
