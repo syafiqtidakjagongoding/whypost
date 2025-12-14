@@ -99,7 +99,6 @@ class _ContentparsingState extends State<Contentparsing> {
     if (text.startsWith('#')) {
       final tag = text.substring(1);
 
-      print(text);
       context.push("/tags/$tag");
       return;
     }

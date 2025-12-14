@@ -57,7 +57,6 @@ class SearchResultsNotifier extends AsyncNotifier<Map<String, dynamic>> {
         query,
         ""
       );
-      print("search result $result");
 
       completer.complete(result);
     });

@@ -62,7 +62,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           final clientSecret = prefs.getString(_clientSecret);
 
           if (instanceUrl == null || clientId == null || clientSecret == null) {
-            debugPrint("❌ Oauth credentials missing");
             return;
           }
 
@@ -74,7 +73,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           );
 
           if (accToken == null || accToken.trim().isEmpty) {
-            debugPrint("❌ Failed to retrieve token.");
             return;
           }
 

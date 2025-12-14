@@ -29,7 +29,6 @@ Future<Map<String, dynamic>?> fetchRelationshipById(
 
     return null;
   } else {
-    print('Error fetch relationship: ${res.statusCode} ${res.body}');
-    return null;
+    throw new Exception('Error fetch relationship: ${res.statusCode} ${res.body}');
   }
 }
