@@ -71,7 +71,7 @@ class _InstanceAuthPage extends ConsumerState<InstanceAuthPage> {
 
       await launchUrl(authUrl, mode: LaunchMode.externalApplication);
     } catch (e) {
-      rethrow; 
+      rethrow;
     }
   }
 
@@ -139,11 +139,9 @@ class _InstanceAuthPage extends ConsumerState<InstanceAuthPage> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            10,
-                          ), 
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        elevation: 2, 
+                        elevation: 2,
                       ),
                       child: Text(
                         "Next",

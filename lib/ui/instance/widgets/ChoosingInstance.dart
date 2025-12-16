@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:whypost/constant/config.dart';
 import 'package:whypost/routing/router.dart';
 import 'package:whypost/routing/routes.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
@@ -71,7 +72,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       final response = await http
           .get(uri)
           .timeout(
-            const Duration(seconds: 7),
+            API_TIMEOUT,
             onTimeout: () {
               throw TimeoutException("Instance take too longer to respond");
             },
@@ -105,7 +106,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       });
     } catch (e) {
       setState(() {
-        _message = "$e";
+        _message = "Failed to checking instane";
       });
     } finally {
       if (mounted) {
@@ -136,7 +137,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       final wellKnownRes = await http
           .get(wellKnownUri)
           .timeout(
-            const Duration(seconds: 7),
+            API_TIMEOUT,
             onTimeout: () {
               throw TimeoutException("Instance is too slow to respond");
             },
@@ -166,7 +167,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       final nodeinfoRes = await http
           .get(nodeinfoUri)
           .timeout(
-            const Duration(seconds: 7),
+           API_TIMEOUT,
             onTimeout: () => throw TimeoutException("Nodeinfo URL timeout"),
           );
 

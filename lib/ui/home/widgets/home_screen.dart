@@ -105,7 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 loading: () => const DrawerHeader(
                   child: Center(child: CircularProgressIndicator()),
                 ),
-             error: (e, st) {
+                error: (e, st) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -241,9 +241,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
                     Text("Failed to load home timeline"),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.invalidate(homeTimelineProvider);
+                      },
+                      child: Text(
+                        "Refresh",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -306,9 +314,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
                     Text("Failed to load trends timeline"),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.invalidate(trendProvider);
+                      },
+                      child: Text(
+                        "Refresh",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -362,9 +377,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
                     Text("Failed to load local timeline"),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.invalidate(publicLocalProvider);
+                      },
+                      child: Text(
+                        "Refresh",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -418,9 +440,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 16),
                     Text("Failed to load public timeline"),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.invalidate(publicFederatedProvider);
+                      },
+                      child: Text(
+                        "Refresh",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
                   ],
                 ),
               );

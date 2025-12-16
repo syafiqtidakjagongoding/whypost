@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:whypost/api/user_api.dart';
 import 'package:whypost/routing/routes.dart';
+import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/state/account.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -29,16 +31,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void _initGuest() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        final user = await ref.read(currentUserProvider.future);
+        final cred = await CredentialsRepository.loadCredentials();
+        final user = await fetchCurrentUser(cred.instanceUrl!, cred.accToken!);
         if (!mounted) return;
 
         if (user != null) {
           _navigateOnce(Routes.home);
+        } else {
+          _navigateOnce(Routes.instance);
         }
       } catch (e) {
-          _navigateOnce(Routes.instance);
+        _navigateOnce(Routes.instance);
       }
-
     });
   }
 
