@@ -125,7 +125,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       body: userAsync.when(
         loading: () => Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Error: $e")),
+        error: (e, _) => Center(child: Text("Failed to load user")),
         data: (user) {
           final userId = user!['id'];
           final statusesAsync = ref.watch(statusesTimelineProvider(userId));
@@ -681,8 +681,25 @@ Widget _buildSecondTab(
       },
       child: favouritedAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text("Failed to load favourite timeline")),
+        error: (e, _) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to load favourited timeline"),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(favouriteProvider);
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: TextStyle(color: Colors.black87, fontSize: 15),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
         data: (posts) {
           if (posts.isEmpty) {
             return const Center(child: Text("No liked posts yet"));
@@ -785,8 +802,25 @@ Widget _buildThirdTab(
       },
       child: bookmarkedAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) =>
-            Center(child: Text("Failed to load bookmarked timeline")),
+        error: (e, _) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to load bookmarked timeline"),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(bookmarkProvider);
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: TextStyle(color: Colors.black87, fontSize: 15),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
         data: (posts) {
           if (posts.isEmpty) {
             return const Center(child: Text("No bookmarked posts yet"));
@@ -843,7 +877,25 @@ Widget _buildThirdTab(
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Failed to load user info")),
+        error: (e, _) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to load user info"),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(selectedUserProvider(identifier));
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: TextStyle(color: Colors.black87, fontSize: 15),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -873,7 +925,25 @@ Widget _buildAboutTab(
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text("Failed to load user")),
+      error: (e, _) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Failed to load user info"),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(selectedUserProvider(identifier));
+                },
+                child: Text(
+                  "Refresh",
+                  style: TextStyle(color: Colors.black87, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     ),
   );
 }

@@ -1,0 +1,53 @@
+pipeline {
+    agent {
+        docker {
+            image 'cirrusci/flutter:stable'
+        }
+    }
+
+    environment {
+        PATH = "${env.PATH}:${env.HOME}/flutter/bin"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'flutter pub get'
+            }
+        }
+
+        stage('Analyze & Test') {
+            steps {
+                sh 'flutter analyze'
+                sh 'flutter test'
+            }
+        }
+
+        stage('Build APK') {
+            steps {
+                sh 'flutter build apk --release --split-per-abi'
+            }
+        }
+
+       stage('Archive APK') {
+			steps {
+				archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/*.apk', fingerprint: true
+			}
+		}
+    }
+
+    post {
+        success {
+            echo 'Successfully build apk'
+        }
+        failure {
+            echo 'Build failed'
+        }
+    }
+}

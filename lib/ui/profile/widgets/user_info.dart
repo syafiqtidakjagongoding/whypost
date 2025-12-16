@@ -358,20 +358,18 @@ class UserInfoTextCard extends StatelessWidget {
                 Text(
                   label,
                   style: textTheme.labelMedium!.copyWith(
-                    fontWeight: FontWeight.w500
-                  )
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 isLink
                     ? GestureDetector(
                         onTap: () async {
                           final uri = Uri.parse(value);
-                          if (await canLaunchUrl(uri)) {
-                            await launchUrl(
-                              uri,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          }
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
                         },
                         child: Text(
                           value,
@@ -382,7 +380,7 @@ class UserInfoTextCard extends StatelessWidget {
                       )
                     : Text(
                         value,
-                         style: textTheme.labelMedium!.copyWith(
+                        style: textTheme.labelMedium!.copyWith(
                           decoration: TextDecoration.underline,
                         ),
                       ),

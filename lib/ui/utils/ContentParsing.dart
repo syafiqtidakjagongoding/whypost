@@ -122,9 +122,8 @@ class _ContentparsingState extends State<Contentparsing> {
 
       if (userToPush.isNotEmpty) {
         context.push("/user/${userToPush["id"]}");
+        return;
       }
-
-      return;
     }
 
     final uri = Uri.parse(url!.startsWith('http') ? url : 'https://$url');

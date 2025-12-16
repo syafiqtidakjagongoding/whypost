@@ -358,8 +358,29 @@ class _PostsTabState extends ConsumerState<PostsTab> {
     if (query.isEmpty) {
       return altPost.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) =>
-            const Center(child: Text("Failed to load alternate posts")),
+        error: (e, st) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to load posts"),
+                ElevatedButton(
+                  onPressed: () {
+                    if (widget.supportTrends) {
+                      ref.invalidate(trendProvider);
+                    } else {
+                      ref.invalidate(publicLocalProvider);
+                    }
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
         data: (posts) {
           if (posts.isEmpty) {
             return const Center(child: Text("There are no alternate posts"));
@@ -374,7 +395,25 @@ class _PostsTabState extends ConsumerState<PostsTab> {
 
     return results.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => const Center(child: Text("Failed to search posts")),
+      error: (e, st) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Failed to search posts"),
+              ElevatedButton(
+                onPressed: () {
+                  ref.invalidate(searchResultsProvider);
+                },
+                child: Text(
+                  "Refresh",
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
       data: (data) {
         final statuses = (data["statuses"] is List)
             ? data["statuses"]
@@ -425,8 +464,27 @@ class TagsTab extends ConsumerWidget {
 
       return results.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) =>
-            const Center(child: Text("Failed to load hashtags")),
+        error: (e, st) {
+          {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Failed to search hashtags"),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.invalidate(searchResultsProvider);
+                    },
+                    child: Text(
+                      "Refresh",
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
         data: (data) {
           final tags = (data["hashtags"] is List)
               ? data["hashtags"]
@@ -453,8 +511,27 @@ class TagsTab extends ConsumerWidget {
     if (query.isEmpty) {
       return trendingTags.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) =>
-            const Center(child: Text("Failed to load trending tags")),
+        error: (e, st) {
+          {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Failed to load trending tags"),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.invalidate(trendingTagsProvider);
+                    },
+                    child: Text(
+                      "Refresh",
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
         data: (list) {
           if (list.isEmpty) {
             return const Center(child: Text("Trending tags are empty"));
@@ -473,8 +550,27 @@ class TagsTab extends ConsumerWidget {
     // -----------------------------------------------------
     return results.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) =>
-          const Center(child: Text("Failed to load hashtags")),
+      error: (e, st) {
+        {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to search hashtags"),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(searchResultsProvider);
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: TextStyle(color: Colors.black87, fontSize: 15),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
       data: (data) {
         final tags = (data["hashtags"] is List)
             ? data["hashtags"]
@@ -524,8 +620,27 @@ class PeopleTab extends ConsumerWidget {
 
     return results.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) =>
-          const Center(child: Text("Failed to find people")),
+      error: (e, st) {
+        {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to search people"),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(searchResultsProvider);
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
       data: (data) {
         final accounts = (data["accounts"] is List)
             ? data["accounts"]
@@ -554,8 +669,27 @@ class LinksTab extends ConsumerWidget {
 
     return trendingLinks.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) =>
-          const Center(child: Text("Failed to load trending links")),
+      error: (e, st) {
+        {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Failed to load trending links timeline"),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(trendingLinksProvider);
+                  },
+                  child: Text(
+                    "Refresh",
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
       data: (list) {
         if (list.isEmpty) {
           return const Center(child: Text("Couldn't find trending links"));
@@ -613,9 +747,8 @@ class LinkListTile extends StatelessWidget {
       leading: const Icon(Icons.link),
       onTap: () async {
         final uri = Uri.parse(link["url"]);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        }
+
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
       },
     );
   }
