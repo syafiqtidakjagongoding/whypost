@@ -13,9 +13,9 @@ Future<Map<String, dynamic>?> fetchUserById(
     final res = await http
         .get(url, headers: {'Authorization': 'Bearer $token'})
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -41,9 +41,9 @@ Future<Map<String, dynamic>?> fetchUserByAcct(
   final res = await http
       .get(url, headers: {"Authorization": "Bearer $token"})
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -63,9 +63,9 @@ Future<Map<String, dynamic>?> fetchCurrentUser(
   final res = await http
       .get(url, headers: {'Authorization': 'Bearer $token'})
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -92,9 +92,9 @@ Future<Map<String, dynamic>?> followUser({
         body: {'reblogs': reblogs.toString(), 'notify': notify.toString()},
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -115,9 +115,9 @@ Future<Map<String, dynamic>?> unfollowUser({
   final res = await http
       .post(url, headers: {'Authorization': 'Bearer $token'})
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 

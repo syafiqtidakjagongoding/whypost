@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:whypost/state/account.dart';
-import 'package:whypost/ui/utils/PeopleListTile.dart';
+import 'package:whypost/ui/utils/people_list_tile.dart';
 
 class FollowScreen extends ConsumerStatefulWidget {
   final String type; // followers / following

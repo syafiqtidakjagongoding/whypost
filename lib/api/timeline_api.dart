@@ -27,9 +27,9 @@ Future<List<dynamic>> fetchHomeTimeline(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -68,9 +68,9 @@ Future<List<dynamic>> fetchPublicFederatedTimeline(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -110,9 +110,9 @@ Future<List<dynamic>> fetchPublicLocalTimeline(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -152,9 +152,9 @@ Future<List<dynamic>> fetchTagTimeline(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -188,9 +188,9 @@ Future<List<dynamic>> fetchFavouritedUser(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -224,9 +224,9 @@ Future<List<dynamic>> fetchBookmarkedUser(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -260,9 +260,9 @@ Future<List<dynamic>> fetchTrendingPost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 

@@ -14,9 +14,9 @@ Future<Map<String, dynamic>?> fetchRelationshipById(
 
   final res = await http.get(url, headers: {"Authorization": "Bearer $token"})
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
     
@@ -29,6 +29,6 @@ Future<Map<String, dynamic>?> fetchRelationshipById(
 
     return null;
   } else {
-    throw new Exception('Error fetch relationship: ${res.statusCode} ${res.body}');
+    throw Exception('Error fetch relationship: ${res.statusCode} ${res.body}');
   }
 }

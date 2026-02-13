@@ -1,2 +1,2 @@
-Duration API_TIMEOUT = const Duration(seconds: 10);
-const String CLIENT_NAME = "Why Post";
+const apiTimeout = Duration(seconds: 10);
+const String clientName = "Why Post";

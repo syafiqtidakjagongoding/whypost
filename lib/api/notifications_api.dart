@@ -17,9 +17,9 @@ Future<List<Map<String, dynamic>>> fetchAllNotifications(
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -50,9 +50,9 @@ Future<List<Map<String, dynamic>>> fetchNotificationsByType(
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -81,9 +81,9 @@ Future<Map<String, dynamic>> fetchNotificationById(
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 

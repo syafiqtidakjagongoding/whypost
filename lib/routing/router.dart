@@ -8,16 +8,16 @@ import 'package:whypost/ui/notifications/widgets/notifications_screen.dart';
 import 'package:whypost/ui/profile/widgets/edit_profile.dart';
 import 'package:whypost/ui/profile/widgets/follow_screen.dart';
 import 'package:whypost/ui/profile/widgets/profile_screen.dart';
-import 'package:whypost/ui/instance/widgets/ChoosingInstance.dart';
-import 'package:whypost/ui/instance/widgets/InstanceAuthPage.dart';
+import 'package:whypost/ui/instance/widgets/choosing_instance.dart';
+import 'package:whypost/ui/instance/widgets/instance_auth_page.dart';
 import 'package:whypost/ui/search/widgets/search_screen.dart';
 import 'package:whypost/ui/settings/widgets/about.dart';
 import 'package:whypost/ui/settings/widgets/instance_info.dart';
 import 'package:whypost/ui/settings/widgets/settings_screen.dart';
 import 'package:whypost/ui/splash/splash_screen.dart';
-import 'package:whypost/ui/tags/TagPostsScreen.dart';
-import 'package:whypost/ui/utils/FullScreenVideoPlayer.dart';
-import 'package:whypost/ui/utils/FullScreenImageViewer.dart';
+import 'package:whypost/ui/tags/tag_posts_screen.dart';
+import 'package:whypost/ui/utils/full_screen_video_player.dart';
+import 'package:whypost/ui/utils/full_screen_image_viewer.dart';
 import 'package:whypost/ui/posts/viewpost_screen.dart';
 
 final router = GoRouter(
@@ -174,6 +174,7 @@ final router = GoRouter(
                   break;
                 case 3:
                   final userId = await CredentialsRepository.getCurrentUserId();
+                  if (!context.mounted) return;
                   context.go(Routes.profile, extra: userId);
                   break;
               }

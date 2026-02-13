@@ -1,12 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:whypost/ui/utils/FullHTMLContent.dart';
+import 'package:whypost/ui/utils/full_html_content.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserInfoTextCard extends StatelessWidget {
   final Map<String, dynamic> account;
-  UserInfoTextCard({super.key, required this.account});
+  const UserInfoTextCard({super.key, required this.account});
 
   void _action(
     String? url,
@@ -230,9 +230,9 @@ class UserInfoTextCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -265,9 +265,9 @@ class UserInfoTextCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.4)),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

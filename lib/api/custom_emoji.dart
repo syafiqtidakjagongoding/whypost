@@ -16,14 +16,14 @@ Future<List<CustomEmoji>> fetchCustomEmojis(
 
     final response = await http.get(url, headers: headers)
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () {
             throw Exception(
-              "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+              "Request timed out after ${apiTimeout.inSeconds} seconds",
             );
           },
         );
-    ;
+
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);

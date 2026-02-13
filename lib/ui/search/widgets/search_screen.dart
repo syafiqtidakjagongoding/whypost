@@ -15,7 +15,7 @@ import 'package:whypost/state/trends.dart';
 import 'package:whypost/ui/posts/post_card.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:whypost/ui/utils/PeopleListTile.dart';
+import 'package:whypost/ui/utils/people_list_tile.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
