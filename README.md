@@ -37,10 +37,6 @@ Overview app
 | IOS | ❌ Not Supported      |
 
 
-
-
-
-
 ## Features
 
 - 🔐 Login to any Fediverse instance (if supported)
@@ -67,7 +63,7 @@ Overview app
 
 
 Prebuilt APKs are available on Codeberg Releases:
-https://codeberg.org/whypost/whypost-mobile/releases
+https://github.com/syafiqtidakjagongoding/whypost/releases
 
 
 ## Build / Run  Locally
@@ -75,13 +71,13 @@ https://codeberg.org/whypost/whypost-mobile/releases
 Clone the project
 
 ```bash
-  git clone https://codeberg.org/whypost/whypost-mobile.git
+  git clone https://github.com/syafiqtidakjagongoding/whypost/whypost.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd whypost-mobile
+  cd whypost
 ```
 
 ### Ensure Flutter is installed
@@ -177,4 +173,3 @@ Please join our Matrix room:
 
 ## Support
 For support, email whypost-whynot@proton.me or join our Matrix room.
-
