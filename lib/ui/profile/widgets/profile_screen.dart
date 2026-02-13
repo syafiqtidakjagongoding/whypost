@@ -12,7 +12,6 @@ import 'package:whypost/ui/utils/ContentParsing.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:whypost/service/FormatNumber.dart';
 import 'package:whypost/state/account.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   final String? identifier;

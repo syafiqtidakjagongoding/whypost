@@ -37,6 +37,6 @@ Future<String?> getAccessToken({
     final data = jsonDecode(response.body);
     return data['access_token'];
   } else {
-    throw new Exception("Gagal exchange token: ${response.body}");
+    throw Exception("Gagal exchange token: ${response.body}");
   }
 }
