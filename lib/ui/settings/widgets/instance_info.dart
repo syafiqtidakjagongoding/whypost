@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:whypost/service/htmlToText.dart';
-import 'package:whypost/service/FormatNumber.dart';
+import 'package:whypost/service/html_to_text.dart';
+import 'package:whypost/service/format_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whypost/state/instance.dart';

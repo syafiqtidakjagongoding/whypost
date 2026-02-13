@@ -25,10 +25,10 @@ Future<String?> getAccessToken({
         }),
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () {
           throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           );
         },
       );

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 Widget displayNameWithEmoji(Map<String, dynamic> account, BuildContext context) {

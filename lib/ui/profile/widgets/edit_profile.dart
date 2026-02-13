@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whypost/api/accounts_api.dart';
-import 'package:whypost/service/htmlToText.dart';
+import 'package:whypost/service/html_to_text.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/state/account.dart';
 
@@ -16,8 +16,8 @@ class EditProfile extends ConsumerStatefulWidget {
 }
 
 class _EditProfileState extends ConsumerState<EditProfile> {
-  late TextEditingController _nameController = TextEditingController();
-  late TextEditingController _bioController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   String? newHeaderPath;
   String? newAvatarPath;

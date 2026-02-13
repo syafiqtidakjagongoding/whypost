@@ -139,10 +139,10 @@ class AppTheme {
         ),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.hovered)) {
-            return Colors.white.withOpacity(0.05);
+            return Colors.white.withValues(alpha: 0.05);
           }
           if (states.contains(WidgetState.pressed)) {
-            return Colors.white.withOpacity(0.10);
+            return Colors.white.withValues(alpha: 0.10);
           }
           return null;
         }),

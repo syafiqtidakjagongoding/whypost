@@ -6,10 +6,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:whypost/constant/config.dart';
 import 'package:whypost/constant/instanceConfig.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
-import 'package:whypost/ui/instance/widgets/RulesRenderer.dart';
-import 'package:whypost/ui/utils/InstanceLink.dart';
+import 'package:whypost/ui/instance/widgets/rules_renderer.dart';
+import 'package:whypost/ui/utils/instance_link.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'TermsRenderer.dart';
+import 'terms_renderer.dart';
 
 class InstanceAuthPage extends ConsumerStatefulWidget {
   final Map<String, dynamic> instanceData;
@@ -35,7 +35,7 @@ class _InstanceAuthPage extends ConsumerState<InstanceAuthPage> {
         appRegUrl,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'client_name': CLIENT_NAME,
+          'client_name': clientName,
           'redirect_uris': REDIRECT_URL,
           'scopes': INSTANCE_SCOPE,
         }),

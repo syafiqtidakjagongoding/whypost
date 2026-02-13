@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:go_router/go_router.dart';
-import 'package:whypost/ui/utils/ExpandableHTML.dart';
+import 'package:whypost/ui/utils/expandable_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contentparsing extends StatefulWidget {

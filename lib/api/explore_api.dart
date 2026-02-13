@@ -26,9 +26,9 @@ Future<Map<String, dynamic>> searchAny(
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -64,9 +64,9 @@ Future<Map<String, dynamic>> searchStatuses(
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -100,9 +100,9 @@ Future<Map<String, dynamic>?> searchOneAccount(
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -130,9 +130,9 @@ Future<List<dynamic>> fetchTrendingTags(String baseUrl, String token) async {
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -155,9 +155,9 @@ Future<List<dynamic>> fetchTrendingLinks(String baseUrl, String token) async {
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
@@ -180,9 +180,9 @@ Future<List<dynamic>> fetchSuggestedPeople(String baseUrl, String token) async {
         },
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
 
