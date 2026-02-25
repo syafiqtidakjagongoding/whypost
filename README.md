@@ -62,7 +62,7 @@ Overview app
 ## Download
 
 
-Prebuilt APKs are available on Codeberg Releases:
+Prebuilt APKs are available on GitHub Releases:
 https://github.com/syafiqtidakjagongoding/whypost/releases
 
 
@@ -71,7 +71,7 @@ https://github.com/syafiqtidakjagongoding/whypost/releases
 Clone the project
 
 ```bash
-  git clone https://github.com/syafiqtidakjagongoding/whypost/whypost.git
+  git clone https://github.com/syafiqtidakjagongoding/whypost.git
 ```
 
 Go to the project directory
@@ -83,7 +83,7 @@ Go to the project directory
 ### Ensure Flutter is installed
 
 If you don't have Flutter installed, follow the official guide:
-[Download flutter](https://docs.flutter.dev/get-started/quick)
+[Download Flutter](https://docs.flutter.dev/get-started/install)
 
 ```bash
   flutter --version
