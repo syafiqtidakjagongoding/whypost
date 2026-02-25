@@ -47,7 +47,7 @@ jobs:
           tag_name: ${{ env.VERSION }}
           name: Release ${{ env.VERSION }}
           draft: false
-          prerelease: contains(env.VERSION, 'beta') || contains(env.VERSION, 'alpha')
+          prerelease: ${{ contains(env.VERSION, 'beta') || contains(env.VERSION, 'alpha') }}
           files: build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,29 +56,17 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # Hapus tag latest lama secara lokal dan remote, lalu buat baru
           git tag -d latest || true
           git push origin :refs/tags/latest || true
           git tag latest
           git push origin latest
 
-      - name: Create GitHub Release (Versioned)
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.VERSION }}
-          name: Release ${{ env.VERSION }}
-          draft: false
-          prerelease: ${{ contains(env.VERSION, 'beta') || contains(env.VERSION, 'alpha') }}
-          files: build/app/outputs/flutter-apk/app-release.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create/Update Latest Release
+      - name: Create Latest Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
           name: Latest Build (${{ env.VERSION }})
-          body: "Ini adalah build terbaru dari branch ${{ github.ref_name }}"
+          body: "Latest build from branch ${{ github.ref_name }}"
           prerelease: false
           files: build/app/outputs/flutter-apk/app-release.apk
         env:
