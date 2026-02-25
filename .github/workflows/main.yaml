@@ -44,7 +44,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.VERSION }}
+          tag_name: v-${{ env.VERSION }}
           name: Release ${{ env.VERSION }}
           draft: false
           prerelease: ${{ contains(env.VERSION, 'beta') || contains(env.VERSION, 'alpha') }}
@@ -58,13 +58,13 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git tag -d latest || true
           git push origin :refs/tags/latest || true
-          git tag latest
-          git push origin latest
+          git tag v-latest
+          git push origin v-latest
 
       - name: Create Latest Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: latest
+          tag_name: v-latest
           name: Latest Build (${{ env.VERSION }})
           body: "Latest build from branch ${{ github.ref_name }}"
           prerelease: false
