@@ -1,19 +1,23 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whypost/api/user_api.dart';
 import 'package:whypost/routing/routes.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
-import 'package:whypost/state/account.dart';
+
 
 class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  String _statusText = "Loading...";
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +44,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         } else {
           _navigateOnce(Routes.instance);
         }
+      } on TimeoutException {
+        if (!mounted) return;
+        setState(() {
+          _statusText = "Server Timeout";
+        });
+        await Future.delayed(const Duration(seconds: 2));
+        SystemNavigator.pop();
       } catch (e) {
         _navigateOnce(Routes.instance);
       }
@@ -59,6 +70,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             const SizedBox(height: 20),
 
             const CircularProgressIndicator(color: Colors.white),
+            const SizedBox(height: 12),
+            Text(_statusText, style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),

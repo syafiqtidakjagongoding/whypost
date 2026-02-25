@@ -79,9 +79,9 @@ Future<List<dynamic>> fetchCommentarByStatusId(
     final res = await http
         .get(uri, headers: {'Authorization': 'Bearer $accessToken'})
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -115,9 +115,9 @@ Future<Map<String, dynamic>> fetchStatusDetail(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -150,9 +150,9 @@ Future<Map<String, dynamic>> deleteStatusesById(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -186,9 +186,9 @@ Future<Map<String, dynamic>> favouritePost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -219,9 +219,9 @@ Future<Map<String, dynamic>> unfavouritePost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -252,9 +252,9 @@ Future<Map<String, dynamic>> bookmarkPost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -285,9 +285,9 @@ Future<Map<String, dynamic>> reblogPost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -318,9 +318,9 @@ Future<Map<String, dynamic>> unreblogPost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -351,9 +351,9 @@ Future<Map<String, dynamic>> unbookmarkPost(
           },
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -451,9 +451,9 @@ Future<void> createFediversePost({
           body: jsonEncode(payload),
         )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () => throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           ),
         );
 
@@ -512,12 +512,11 @@ Future<Map<String, dynamic>> editFediversePost({
         body: json.encode(body),
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () => throw Exception(
-          "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+          "Request timed out after ${apiTimeout.inSeconds} seconds",
         ),
       );
-  ;
 
   if (response.statusCode == 200) {
     return json.decode(response.body) as Map<String, dynamic>;
@@ -540,12 +539,11 @@ Future<String> _uploadMedia({
   request.files.add(await http.MultipartFile.fromPath('file', image.path));
 
   final streamedResponse = await request.send().timeout(
-    API_TIMEOUT,
+    apiTimeout,
     onTimeout: () => throw Exception(
-      "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+      "Request timed out after ${apiTimeout.inSeconds} seconds",
     ),
   );
-  ;
   final response = await http.Response.fromStream(streamedResponse);
 
   if (response.statusCode == 200 || response.statusCode == 202) {

@@ -180,6 +180,7 @@ class _PeopleListTileState extends ConsumerState<PeopleListTile> {
                             );
                             ref.invalidate(relationshipProvider(id));
                           } catch (e) {
+                            if (!context.mounted) return;
                             final messenger = ScaffoldMessenger.of(context);
                             messenger.showSnackBar(
                               const SnackBar(

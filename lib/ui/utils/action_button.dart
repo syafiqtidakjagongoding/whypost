@@ -6,7 +6,7 @@ class ActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color? color;
 
-  const ActionButton({required this.icon, required this.onTap, this.color});
+  const ActionButton({super.key, required this.icon, required this.onTap, this.color});
 
   @override
   Widget build(BuildContext context) {

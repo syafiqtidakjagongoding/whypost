@@ -3,9 +3,9 @@ import 'package:whypost/api/statuses_api.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/state/timeline.dart';
 import 'package:whypost/ui/posts/post_media.dart';
-import 'package:whypost/ui/utils/ContentParsing.dart';
-import 'package:whypost/ui/posts/commentList.dart';
-import 'package:whypost/ui/utils/displayNameWithEmoji.dart';
+import 'package:whypost/ui/utils/content_parsing.dart';
+import 'package:whypost/ui/posts/comment_list.dart';
+import 'package:whypost/ui/utils/display_name_with_emoji.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,6 +77,7 @@ class _ViewpostScreenState extends ConsumerState<ViewpostScreen> {
                           cred.accToken!,
                           postId,
                         );
+                        if (!mounted) return;
                         final messenger = ScaffoldMessenger.of(context);
                         messenger.showSnackBar(
                           const SnackBar(

@@ -72,7 +72,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       final response = await http
           .get(uri)
           .timeout(
-            API_TIMEOUT,
+            apiTimeout,
             onTimeout: () {
               throw TimeoutException("Instance take too longer to respond");
             },
@@ -137,7 +137,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       final wellKnownRes = await http
           .get(wellKnownUri)
           .timeout(
-            API_TIMEOUT,
+            apiTimeout,
             onTimeout: () {
               throw TimeoutException("Instance is too slow to respond");
             },
@@ -167,7 +167,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       final nodeinfoRes = await http
           .get(nodeinfoUri)
           .timeout(
-           API_TIMEOUT,
+           apiTimeout,
             onTimeout: () => throw TimeoutException("Nodeinfo URL timeout"),
           );
 

@@ -6,11 +6,11 @@ import 'package:whypost/routing/routes.dart';
 import 'package:whypost/state/action.dart';
 import 'package:whypost/sharedpreferences/credentials.dart';
 import 'package:whypost/state/timeline.dart';
-import 'package:whypost/ui/utils/ActionButton.dart';
-import 'package:whypost/ui/utils/ContentParsing.dart';
+import 'package:whypost/ui/utils/action_button.dart';
+import 'package:whypost/ui/utils/content_parsing.dart';
 import 'package:flutter/material.dart';
 import 'package:whypost/ui/posts/post_media.dart';
-import 'package:whypost/ui/utils/displayNameWithEmoji.dart';
+import 'package:whypost/ui/utils/display_name_with_emoji.dart';
 import 'package:share_plus/share_plus.dart';
 
 class PostCard extends ConsumerStatefulWidget {
@@ -21,13 +21,13 @@ class PostCard extends ConsumerStatefulWidget {
   final Map<String, dynamic>? rebloggedBy;
 
   const PostCard({
-    Key? key,
+    super.key,
     required this.post,
     required this.account,
     required this.timeAgo,
     required this.isReblog,
     required this.rebloggedBy,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<PostCard> createState() => _PostCardState();
@@ -79,6 +79,8 @@ class _PostCardState extends ConsumerState<PostCard> {
                     ),
                     TextButton(
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        if (!ctx.mounted) return;
                         Navigator.pop(ctx); // close dialog
 
                         final cred =
@@ -89,7 +91,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                           cred.accToken!,
                           postId, // <-- ganti dengan id postinganmu
                         );
-                        final messenger = ScaffoldMessenger.of(context);
+                        if (!context.mounted) return;
                         messenger.showSnackBar(
                           const SnackBar(
                             content: Text("Post deleted successfully"),
@@ -242,7 +244,7 @@ class _PostCardState extends ConsumerState<PostCard> {
           BoxShadow(
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.black54
-                : Color(0xFF94A3B8).withOpacity(0.2),
+                : Color(0xFF94A3B8).withValues(alpha: 0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

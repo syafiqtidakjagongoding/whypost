@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whypost/routing/routes.dart';
-import 'package:whypost/ui/utils/FediverseImage.dart';
-import 'package:whypost/ui/utils/FediverseVideo.dart';
+import 'package:whypost/ui/utils/fediverse_image.dart';
+import 'package:whypost/ui/utils/fediverse_video.dart';
 
 
 class PostMedia extends StatefulWidget {
@@ -117,7 +117,7 @@ class _PostMediaState extends State<PostMedia> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                     ),
                     child: const Text(
                       "Sensitive content – tap to reveal",

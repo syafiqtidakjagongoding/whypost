@@ -8,15 +8,14 @@ import 'package:whypost/state/action.dart';
 import 'package:whypost/state/timeline.dart';
 import 'package:whypost/ui/posts/post_card.dart';
 import 'package:whypost/ui/profile/widgets/user_info.dart';
-import 'package:whypost/ui/utils/ContentParsing.dart';
+import 'package:whypost/ui/utils/content_parsing.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:whypost/service/FormatNumber.dart';
+import 'package:whypost/service/format_number.dart';
 import 'package:whypost/state/account.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   final String? identifier;
-  ProfileScreen({super.key, this.identifier});
+  const ProfileScreen({super.key, this.identifier});
 
   @override
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
@@ -196,7 +195,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         onPressed: () => context.pop(),
                                         style: IconButton.styleFrom(
                                           backgroundColor: Colors.black
-                                              .withOpacity(0.6),
+                                                .withValues(alpha: 0.6),
                                           foregroundColor: Colors.white,
                                         ),
                                       ),
@@ -213,7 +212,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           },
                                           style: IconButton.styleFrom(
                                             backgroundColor: Colors.black
-                                                .withOpacity(0.6),
+                                                  .withValues(alpha: 0.6),
                                             foregroundColor: Colors.white,
                                           ),
                                         ),
@@ -228,7 +227,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           onPressed: () {},
                                           style: IconButton.styleFrom(
                                             backgroundColor: Colors.black
-                                                .withOpacity(0.6),
+                                                  .withValues(alpha: 0.6),
                                             foregroundColor: Colors.white,
                                           ),
                                         ),
@@ -383,6 +382,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                   ),
                                                 );
                                               } catch (e) {
+                                                if (!context.mounted) return;
                                                 ScaffoldMessenger.of(
                                                   context,
                                                 ).showSnackBar(
@@ -791,7 +791,7 @@ Widget _buildThirdTab(
   AsyncValue<Map<String, dynamic>?> userAsync,
   String identifier,
   String currentUserId,
-  ScrollController _bookmarkedController,
+  ScrollController bookmarkedController,
   WidgetRef ref,
 ) {
   if (identifier == currentUserId) {
@@ -829,7 +829,7 @@ Widget _buildThirdTab(
           return ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: posts.length,
-            controller: _bookmarkedController,
+            controller: bookmarkedController,
             itemBuilder: (context, i) {
               final post = posts[i];
               final isReblog = post['reblog'] != null;

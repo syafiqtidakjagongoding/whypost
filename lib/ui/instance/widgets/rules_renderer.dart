@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class RulesRenderer extends StatelessWidget {
   final List<dynamic>? rules;
 
-  const RulesRenderer({Key? key, this.rules}) : super(key: key);
+  const RulesRenderer({super.key, this.rules});
 
   @override
   Widget build(BuildContext context) {

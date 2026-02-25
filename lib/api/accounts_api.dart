@@ -19,10 +19,10 @@ Future<List<Map<String, dynamic>>> getAccountFollowers({
       headers: {"Authorization": "Bearer $accessToken"},
     )
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () {
             throw Exception(
-              "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+              "Request timed out after ${apiTimeout.inSeconds} seconds",
             );
           },
         );
@@ -52,10 +52,10 @@ Future<List<Map<String, dynamic>>> getAccountFollowing({
     final response = await http
         .get(uri, headers: {"Authorization": "Bearer $accessToken"})
         .timeout(
-          API_TIMEOUT,
+          apiTimeout,
           onTimeout: () {
             throw Exception(
-              "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+              "Request timed out after ${apiTimeout.inSeconds} seconds",
             );
           },
         );
@@ -150,10 +150,10 @@ Future<void> updateProfile({
 
   // Send request
   final streamedResponse = await request.send().timeout(
-    API_TIMEOUT,
+    apiTimeout,
     onTimeout: () {
       throw Exception(
-        "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+        "Request timed out after ${apiTimeout.inSeconds} seconds",
       );
     },
   );

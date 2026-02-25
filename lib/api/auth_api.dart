@@ -25,10 +25,10 @@ Future<String?> getAccessToken({
         }),
       )
       .timeout(
-        API_TIMEOUT,
+        apiTimeout,
         onTimeout: () {
           throw Exception(
-            "Request timed out after ${API_TIMEOUT.inSeconds} seconds",
+            "Request timed out after ${apiTimeout.inSeconds} seconds",
           );
         },
       );
@@ -37,6 +37,6 @@ Future<String?> getAccessToken({
     final data = jsonDecode(response.body);
     return data['access_token'];
   } else {
-    throw new Exception("Gagal exchange token: ${response.body}");
+    throw Exception("Gagal exchange token: ${response.body}");
   }
 }
