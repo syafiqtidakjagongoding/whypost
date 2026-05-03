@@ -24,12 +24,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.38.1'
+          flutter-version: '3.41.9'
           channel: 'stable'
 
       - name: Install Dependencies
@@ -56,10 +56,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -d latest || true
-          git push origin :refs/tags/latest || true
-          git tag v-latest
-          git push origin v-latest
+          git tag -f v-latest
+          git push origin v-latest -f
 
       - name: Create Latest Release
         uses: softprops/action-gh-release@v1

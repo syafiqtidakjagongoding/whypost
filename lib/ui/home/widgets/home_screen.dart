@@ -106,17 +106,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Center(child: CircularProgressIndicator()),
                 ),
                 error: (e, st) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Failed to load instance"),
-                        backgroundColor: Colors.red,
-                        duration: const Duration(seconds: 3),
+                  return DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Icon(Icons.error_outline, color: Colors.redAccent),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              "Failed to load instance",
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  });
-
-                  return const SizedBox.shrink();
+                    ),
+                  );
                 },
                 data: (instance) => DrawerHeader(
                   decoration: BoxDecoration(

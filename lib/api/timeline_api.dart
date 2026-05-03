@@ -77,7 +77,6 @@ Future<List<dynamic>> fetchPublicFederatedTimeline(
     if (res.statusCode != 200) {
       throw Exception("Failed to load federated timeline: ${res.body}");
     }
-
     return jsonDecode(res.body);
   } catch (e) {
     rethrow;
