@@ -56,10 +56,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -d latest || true
-          git push origin :refs/tags/latest || true
-          git tag v-latest
-          git push origin v-latest
+          git tag -f v-latest
+          git push origin v-latest -f
 
       - name: Create Latest Release
         uses: softprops/action-gh-release@v1
