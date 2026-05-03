@@ -76,16 +76,38 @@ class _PeopleListTileState extends ConsumerState<PeopleListTile> {
               ref.invalidate(selectedUserProvider(id));
               context.push('/user/$id');
             },
+            
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    backgroundImage: avatar.isNotEmpty
-                        ? NetworkImage(avatar)
-                        : null,
-                    child: avatar.isEmpty ? const Icon(Icons.person) : null,
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromRGBO(255, 117, 31, 1),
+                          Color.fromRGBO(255, 117, 31, 0.6),
+                        ],
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        backgroundImage: avatar.isNotEmpty
+                            ? NetworkImage(avatar)
+                            : null,
+                        radius: 22,
+                        backgroundColor: Colors.grey[200],
+                        child: avatar.isEmpty ? const Icon(Icons.person) : null,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

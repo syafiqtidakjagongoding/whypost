@@ -29,8 +29,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     load();
   }
 
-  
-
   Future<void> load() async {
     final user = await ref.read(currentUserProvider.future);
 
@@ -60,8 +58,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       setState(() {
         newHeaderPath = picked.path;
       });
-
-    } 
+    }
   }
 
   Future<void> pickAvatar() async {
@@ -74,13 +71,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       setState(() {
         newAvatarPath = picked.path;
       });
-
-    } 
+    }
   }
 
   Future<void> saveProfile() async {
     try {
-
       final cred = await CredentialsRepository.loadCredentials();
       await updateProfile(
         baseUrl: cred.instanceUrl!,
@@ -141,10 +136,19 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       color: Colors.grey[800],
                       child: newHeaderPath != null
                           ? Image.file(File(newHeaderPath!), fit: BoxFit.cover)
-                          : Image.network(
-                              userData!['header'],
-                              fit: BoxFit.cover,
-                            ),
+                          : (userData?['header'] != null &&
+                                  userData!['header'].toString().isNotEmpty &&
+                                  Uri.tryParse(userData['header'])?.hasAuthority == true)
+                              ? Image.network(
+                                  userData['header'],
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Center(
+                                    child: Icon(Icons.image, color: Colors.grey[600], size: 40),
+                                  ),
+                                )
+                              : Center(
+                                  child: Icon(Icons.image, color: Colors.grey[600], size: 40),
+                                ),
                     ),
 
                     Positioned(

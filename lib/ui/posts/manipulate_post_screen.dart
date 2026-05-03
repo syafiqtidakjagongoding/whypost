@@ -57,7 +57,7 @@ class _AddPostWidgetState extends ConsumerState<AddPostWidget> {
   Map<String, dynamic>? _originalPost;
   List<Map<String, dynamic>> _existingMedia = [];
   bool _isLoading = true;
-  String _visibility = 'public';
+  String _visibility = 'unlisted';
 
   static const List<Map<String, dynamic>> _visibilityOptions = [
     {'value': 'public', 'icon': Icons.public, 'label': 'Public'},
