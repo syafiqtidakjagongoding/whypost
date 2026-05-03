@@ -1,7 +1,10 @@
-
 import 'package:flutter/material.dart';
 
-Widget displayNameWithEmoji(Map<String, dynamic> account, BuildContext context) {
+Widget displayNameWithEmoji(
+  Map<String, dynamic> account,
+  BuildContext context, [
+  String? suffix,
+]) {
   final displayName = account['display_name'] == ""
       ? account['username']
       : account['display_name'];
@@ -29,9 +32,7 @@ Widget displayNameWithEmoji(Map<String, dynamic> account, BuildContext context) 
           ),
         );
       } else {
-        children.add(
-          TextSpan(text: m.group(0)),
-        );
+        children.add(TextSpan(text: m.group(0)));
       }
 
       return '';
@@ -41,7 +42,11 @@ Widget displayNameWithEmoji(Map<String, dynamic> account, BuildContext context) 
       return '';
     },
   );
- 
+
+  if (suffix != null && suffix.isNotEmpty) {
+    children.add(TextSpan(text: suffix));
+  }
+
   return RichText(
     maxLines: 1,
     overflow: TextOverflow.ellipsis,

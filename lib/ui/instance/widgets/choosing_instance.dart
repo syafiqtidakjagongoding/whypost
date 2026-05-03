@@ -20,17 +20,15 @@ class ChooseInstancePage extends ConsumerStatefulWidget {
 
 class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
   final _formKey = GlobalKey<FormState>();
-  final _controller = TextEditingController(text: 'https://mastodon.social');
+  final _controller = TextEditingController(text: 'mastodon.social');
   bool _loading = false;
   String? _message;
 
   String? _validateInstance(String? v) {
-    if (v == null || v.trim().isEmpty) return 'Please enter the instance URL.';
+    if (v == null || v.trim().isEmpty) return 'Please enter the domain name.';
     final text = v.trim();
-    if (!text.startsWith('http')) {
-      return 'Use the full URL format (https://...).';
-    }
-    if (!text.contains('.')) return 'The instance URL looks invalid.';
+    if (!text.contains('.')) return 'The domain looks invalid.';
+    if (text.contains(' ')) return 'Domain should not contain spaces.';
     return null;
   }
 
@@ -42,7 +40,8 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
       _message = null;
     });
 
-    final instance = _controller.text.trim();
+    final domain = _controller.text.trim().replaceAll(RegExp(r'^https?://'), '');
+    final instance = 'https://$domain';
 
     try {
       final nodeinfo = await detectNodeInfo(instance);
@@ -200,7 +199,7 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
-                'Enter Fediverse Instance URL\n',
+                'Enter Fediverse Instance Domain\n',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -208,12 +207,18 @@ class _ChooseInstancePageState extends ConsumerState<ChooseInstancePage> {
                 controller: _controller,
                 validator: _validateInstance,
                 decoration: InputDecoration(
-                  labelText: 'Instance URL',
+                  labelText: 'Instance Domain',
+                  hintText: 'mastodon.social',
                   fillColor: Colors.white,
                   labelStyle: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                   prefixIcon: Icon(Icons.link),
+                  prefixText: 'https://',
+                  prefixStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                  ),
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.url,
